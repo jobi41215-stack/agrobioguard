@@ -5,20 +5,35 @@ import { analyzeImage as analyzeSelectedImage } from "@/lib/analysis/image-analy
 import { getSafeAnalysisErrorMessage } from "@/lib/analysis/analysis-provider-error";
 import { assessRisk } from "@/lib/analysis/risk-assessment-service";
 import { generateWarning } from "@/lib/analysis/warning-service";
+import { getCurrentLocation } from "@/lib/analysis/location-service";
+
 import type { AnalysisResult } from "@/lib/analysis/types";
-import type { AgroWarning, RiskAssessment } from "@/lib/analysis/risk-types";
+import type {
+  AgroWarning,
+  LocationContext,
+  RiskAssessment,
+} from "@/lib/analysis/risk-types";
 
 type AnalysisState = "empty" | "ready" | "loading" | "success" | "error";
+type LocationState = "unavailable" | "loading" | "success" | "error";
 
 export function IdentificationWorkspace() {
   const [preview, setPreview] = useState<string>();
   const [fileName, setFileName] = useState("");
   const [image, setImage] = useState<File>();
+
   const [result, setResult] = useState<AnalysisResult>();
-  const [riskAssessment, setRiskAssessment] = useState<RiskAssessment>();
+  const [riskAssessment, setRiskAssessment] =
+    useState<RiskAssessment>();
   const [warning, setWarning] = useState<AgroWarning>();
+
   const [state, setState] = useState<AnalysisState>("empty");
   const [error, setError] = useState("");
+
+  const [location, setLocation] = useState<LocationContext>();
+  const [locationState, setLocationState] =
+    useState<LocationState>("unavailable");
+  const [locationError, setLocationError] = useState("");
 
   const uploadInput = useRef<HTMLInputElement>(null);
   const cameraInput = useRef<HTMLInputElement>(null);
@@ -62,9 +77,11 @@ export function IdentificationWorkspace() {
     setPreview(URL.createObjectURL(file));
     setFileName(file.name);
     setImage(file);
+
     setResult(undefined);
     setRiskAssessment(undefined);
     setWarning(undefined);
+
     setState("ready");
   }
 
@@ -76,9 +93,11 @@ export function IdentificationWorkspace() {
     setPreview(undefined);
     setFileName("");
     setImage(undefined);
+
     setResult(undefined);
     setRiskAssessment(undefined);
     setWarning(undefined);
+
     setError("");
     setState("empty");
 
@@ -88,6 +107,32 @@ export function IdentificationWorkspace() {
 
     if (cameraInput.current) {
       cameraInput.current.value = "";
+    }
+  }
+
+  async function useMyLocation() {
+    setLocationState("loading");
+    setLocationError("");
+
+    try {
+      const currentLocation = await getCurrentLocation();
+
+      const locationContext: LocationContext = {
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude,
+        source: "device",
+      };
+
+      setLocation(locationContext);
+      setLocationState("success");
+    } catch (locationError) {
+      setLocationState("error");
+
+      setLocationError(
+        locationError instanceof Error
+          ? locationError.message
+          : "Unable to access your current location.",
+      );
     }
   }
 
@@ -104,38 +149,56 @@ export function IdentificationWorkspace() {
     setState("loading");
 
     try {
-      // Step 1: identify the image using the active analysis provider.
-      const analysis = await analyzeSelectedImage({ image });
+      // Step 1: Identify the uploaded image.
+      const analysis = await analyzeSelectedImage({
+        image,
+      });
 
-      // Step 2: pass the identification result through AgroBioGuard's
-      // risk-assessment layer.
-      const assessment = assessRisk(analysis);
+      // Step 2: Assess agricultural/ecological risk.
+      const assessment = assessRisk(
+        analysis,
+        location,
+      );
 
-      // Step 3: generate a user-facing agricultural warning.
-      const generatedWarning = generateWarning(analysis);
+      // Step 3: Generate a user-facing warning.
+      const generatedWarning = generateWarning(
+        analysis,
+        location,
+      );
 
       setResult(analysis);
       setRiskAssessment(assessment);
       setWarning(generatedWarning);
       setState("success");
     } catch (analysisError) {
-      setError(getSafeAnalysisErrorMessage(analysisError));
+      setError(
+        getSafeAnalysisErrorMessage(analysisError),
+      );
       setState("error");
     }
   }
 
-  function getWarningClass(severity?: AgroWarning["severity"]) {
+  function getWarningClass(
+    severity?: AgroWarning["severity"],
+  ) {
     switch (severity) {
       case "critical":
         return "risk-card critical";
+
       case "warning":
         return "risk-card warning";
+
       case "caution":
         return "risk-card caution";
+
       default:
         return "risk-card info";
     }
   }
+
+  const hasCoordinates =
+    location?.latitude !== undefined &&
+    location?.longitude !== undefined;
 
   return (
     <section
@@ -156,14 +219,19 @@ export function IdentificationWorkspace() {
           </div>
 
           <p>
-            Upload a close, well-lit image or use your device camera.
-            AgroBioGuard identifies the observation and then passes the result
-            through its agricultural risk-assessment workflow.
+            Upload a close, well-lit image or use your device
+            camera. AgroBioGuard identifies the observation and
+            then passes the result through its agricultural
+            risk-assessment workflow.
           </p>
         </div>
 
         <div className="identification-grid">
-          {/* IMAGE INPUT */}
+
+          {/* =========================
+              IMAGE INPUT
+          ========================== */}
+
           <div className="upload-panel">
             <div className="panel-label">
               <span>IMAGE INPUT</span>
@@ -172,15 +240,19 @@ export function IdentificationWorkspace() {
 
             {!preview ? (
               <div className="dropzone">
-                <span className="upload-symbol" aria-hidden="true">
+                <span
+                  className="upload-symbol"
+                  aria-hidden="true"
+                >
                   ⌁
                 </span>
 
                 <h3>Add an observation image</h3>
 
                 <p>
-                  Use a focused image of one plant, animal, insect, or weed
-                  for the best identification result.
+                  Use a focused image of one plant, animal,
+                  insect, or weed for the best identification
+                  result.
                 </p>
 
                 <div className="upload-actions">
@@ -262,11 +334,100 @@ export function IdentificationWorkspace() {
               </div>
             )}
 
+            {/* =========================
+                LOCATION
+            ========================== */}
+
+            <div className="location-panel">
+              <div className="location-panel-header">
+                <div>
+                  <span
+                    className="location-icon"
+                    aria-hidden="true"
+                  >
+                    📍
+                  </span>
+
+                  <div>
+                    <strong>
+                      Location-aware assessment
+                    </strong>
+
+                    <p>
+                      Allow AgroBioGuard to use your current
+                      location for contextual risk assessment.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  className="button outline"
+                  onClick={useMyLocation}
+                  disabled={locationState === "loading"}
+                  type="button"
+                >
+                  {locationState === "loading"
+                    ? "Getting location..."
+                    : locationState === "success"
+                      ? "Update location"
+                      : "Use my location"}
+                </button>
+              </div>
+
+              {locationState === "success" && location ? (
+                <div className="location-success">
+                  <span>
+                    ✓ Location available
+                  </span>
+
+                  {hasCoordinates ? (
+                    <small>
+                      Latitude:{" "}
+                      {location.latitude!.toFixed(6)} ·
+                      Longitude:{" "}
+                      {location.longitude!.toFixed(6)}
+                    </small>
+                  ) : (
+                    <small>
+                      Coordinates are not available.
+                    </small>
+                  )}
+                </div>
+              ) : null}
+
+              {locationState === "error" ? (
+                <p
+                  className="analysis-error"
+                  role="alert"
+                >
+                  {locationError}
+                </p>
+              ) : null}
+
+              {locationState === "unavailable" ? (
+                <small className="location-note">
+                  Location is optional. You can analyze an
+                  image without sharing your location.
+                </small>
+              ) : null}
+            </div>
+
+            {/* =========================
+                GENERAL ERROR
+            ========================== */}
+
             {state === "error" && (
-              <p className="analysis-error" role="alert">
+              <p
+                className="analysis-error"
+                role="alert"
+              >
                 {error}
               </p>
             )}
+
+            {/* =========================
+                ANALYZE BUTTON
+            ========================== */}
 
             <button
               className="button analyze-button"
@@ -275,71 +436,107 @@ export function IdentificationWorkspace() {
               type="button"
             >
               {state === "loading"
-                ? "Analyzing image…"
+                ? "Analyzing image..."
                 : "Analyze image"}
 
               <span>→</span>
             </button>
           </div>
 
-          {/* ANALYSIS RESULT */}
-          <div className="result-panel" aria-live="polite">
+          {/* =========================
+              ANALYSIS RESULT
+          ========================== */}
+
+          <div
+            className="result-panel"
+            aria-live="polite"
+          >
             <div className="panel-label">
               <span>ANALYSIS RESULT</span>
-              <b className="demo-label">PLANTNET AI</b>
+
+              <b className="demo-label">
+                PLANTNET AI
+              </b>
             </div>
 
-            {state === "empty" || state === "error" ? (
-              <div className="result-empty">
-                <span aria-hidden="true">◌</span>
+            {/* EMPTY / ERROR */}
 
-                <h3>Your identification will appear here.</h3>
+            {state === "empty" ||
+            state === "error" ? (
+              <div className="result-empty">
+                <span aria-hidden="true">
+                  ◌
+                </span>
+
+                <h3>
+                  Your identification will appear here.
+                </h3>
 
                 <p>
-                  Results will include the identified species, confidence,
-                  AgroBioGuard risk context, and a practical recommendation.
+                  Results will include the identified
+                  species, confidence, AgroBioGuard risk
+                  context, and a practical recommendation.
                 </p>
               </div>
             ) : null}
+
+            {/* READY */}
 
             {state === "ready" ? (
               <div className="result-empty">
-                <span aria-hidden="true">◎</span>
+                <span aria-hidden="true">
+                  ◎
+                </span>
 
-                <h3>Image ready for analysis.</h3>
+                <h3>
+                  Image ready for analysis.
+                </h3>
 
                 <p>
-                  Select <b>Analyze image</b> to identify the uploaded
-                  observation.
+                  Select{" "}
+                  <b>Analyze image</b>{" "}
+                  to identify the uploaded observation.
                 </p>
               </div>
             ) : null}
+
+            {/* LOADING */}
 
             {state === "loading" ? (
               <div className="result-loading">
                 <span className="loader" />
 
-                <h3>Analyzing your observation</h3>
+                <h3>
+                  Analyzing your observation
+                </h3>
 
                 <p>
-                  Plant identification and AgroBioGuard assessment are being
+                  Plant identification and
+                  AgroBioGuard assessment are being
                   processed.
                 </p>
               </div>
             ) : null}
 
+            {/* SUCCESS */}
+
             {state === "success" ? (
               <div className="result-content">
+
                 {/* IDENTIFICATION HEADER */}
+
                 <div className="result-title">
                   <span className="category-pill">
                     {result?.category}
                   </span>
 
-                  {result?.confidence !== undefined ? (
+                  {result?.confidence !==
+                  undefined ? (
                     <span className="confidence">
                       Identification confidence{" "}
-                      <b>{result.confidence}%</b>
+                      <b>
+                        {result.confidence}%
+                      </b>
                     </span>
                   ) : null}
                 </div>
@@ -357,9 +554,13 @@ export function IdentificationWorkspace() {
                 </p>
 
                 {/* IDENTIFICATION DETAILS */}
+
                 <dl className="result-details">
                   <div>
-                    <dt>Identification source</dt>
+                    <dt>
+                      Identification source
+                    </dt>
+
                     <dd>
                       {result?.provider?.model ??
                         "Plant identification service"}
@@ -368,6 +569,7 @@ export function IdentificationWorkspace() {
 
                   <div>
                     <dt>Common name</dt>
+
                     <dd>
                       {result?.commonName ??
                         result?.identifiedName ??
@@ -376,31 +578,65 @@ export function IdentificationWorkspace() {
                   </div>
 
                   <div>
-                    <dt>Location &amp; context</dt>
+                    <dt>
+                      Location &amp; context
+                    </dt>
+
                     <dd>
-                      {result?.locationContext ??
-                        "Location context is not available yet."}
+                      {location ? (
+                        <>
+                          Device location available.
+                          <br />
+
+                          {hasCoordinates ? (
+                            <small>
+                              {location.latitude!.toFixed(
+                                6,
+                              )}
+                              ,{" "}
+                              {location.longitude!.toFixed(
+                                6,
+                              )}
+                            </small>
+                          ) : (
+                            <small>
+                              Coordinates are not available.
+                            </small>
+                          )}
+                        </>
+                      ) : (
+                        "Location was not provided."
+                      )}
                     </dd>
                   </div>
                 </dl>
 
                 {/* AGROBIOGUARD RISK ASSESSMENT */}
+
                 {riskAssessment ? (
                   <div className="risk-assessment-card">
                     <div className="risk-assessment-header">
-                      <span>AGROBIOGUARD RISK ASSESSMENT</span>
+                      <span>
+                        AGROBIOGUARD RISK ASSESSMENT
+                      </span>
 
                       <strong>
                         {riskAssessment.level.toUpperCase()}
                       </strong>
                     </div>
 
-                    <h4>{riskAssessment.title}</h4>
+                    <h4>
+                      {riskAssessment.title}
+                    </h4>
 
-                    <p>{riskAssessment.description}</p>
+                    <p>
+                      {riskAssessment.description}
+                    </p>
 
                     <div className="risk-recommendation">
-                      <b>Recommended action</b>
+                      <b>
+                        Recommended action
+                      </b>
 
                       <span>
                         {riskAssessment.recommendation}
@@ -410,13 +646,24 @@ export function IdentificationWorkspace() {
                 ) : null}
 
                 {/* AGRICULTURAL WARNING */}
+
                 {warning ? (
-                  <div className={getWarningClass(warning.severity)}>
+                  <div
+                    className={getWarningClass(
+                      warning.severity,
+                    )}
+                  >
                     <div className="risk-card-header">
-                      <span aria-hidden="true">⚠</span>
+                      <span
+                        aria-hidden="true"
+                      >
+                        ⚠
+                      </span>
 
                       <div>
-                        <b>{warning.title}</b>
+                        <b>
+                          {warning.title}
+                        </b>
 
                         <small>
                           {warning.severity.toUpperCase()}
@@ -424,27 +671,91 @@ export function IdentificationWorkspace() {
                       </div>
                     </div>
 
-                    <p>{warning.message}</p>
+                    <p>
+                      {warning.message}
+                    </p>
 
                     <div className="warning-recommendation">
                       <b>Action</b>
 
-                      <span>{warning.recommendation}</span>
+                      <span>
+                        {warning.recommendation}
+                      </span>
                     </div>
                   </div>
                 ) : null}
 
+                {/* LOCATION CONTEXT */}
+
+                <div className="location-result-card">
+                  <div className="location-result-header">
+                    <span aria-hidden="true">
+                      📍
+                    </span>
+
+                    <div>
+                      <b>
+                        LOCATION CONTEXT
+                      </b>
+
+                      <small>
+                        {location
+                          ? "Device location used"
+                          : "No location provided"}
+                      </small>
+                    </div>
+                  </div>
+
+                  {location ? (
+                    <p>
+                      AgroBioGuard received the device
+                      coordinates for location-aware
+                      processing.
+                      <br />
+
+                      {hasCoordinates ? (
+                        <strong>
+                          {location.latitude!.toFixed(
+                            6,
+                          )}
+                          ,{" "}
+                          {location.longitude!.toFixed(
+                            6,
+                          )}
+                        </strong>
+                      ) : (
+                        <strong>
+                          Coordinates are not available.
+                        </strong>
+                      )}
+                    </p>
+                  ) : (
+                    <p>
+                      No device location was shared.
+                      The identification can still be
+                      reviewed without location data.
+                    </p>
+                  )}
+                </div>
+
                 {/* INFORMATION NOTE */}
+
                 <div className="analysis-note">
                   <span>ⓘ</span>
 
                   <p>
-                    <b>AI identification + AgroBioGuard assessment.</b>{" "}
-                    Plant identification is provided by the PlantNet
-                    identification service. Agricultural risk assessment is
-                    handled separately by AgroBioGuard.
+                    <b>
+                      AI identification +
+                      AgroBioGuard assessment.
+                    </b>{" "}
+                    Plant identification is provided
+                    by the PlantNet identification
+                    service. Agricultural risk
+                    assessment is handled separately
+                    by AgroBioGuard.
                   </p>
                 </div>
+
               </div>
             ) : null}
           </div>
