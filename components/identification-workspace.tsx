@@ -2,6 +2,7 @@
 
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { analyzeImage as analyzeSelectedImage } from "@/lib/analysis/image-analysis-service";
+import { getSafeAnalysisErrorMessage } from "@/lib/analysis/analysis-provider-error";
 import type { AnalysisResult } from "@/lib/analysis/types";
 
 type AnalysisState = "empty" | "ready" | "loading" | "success" | "error";
@@ -66,8 +67,8 @@ export function IdentificationWorkspace() {
       const analysis = await analyzeSelectedImage({ image });
       setResult(analysis);
       setState("success");
-    } catch {
-      setError("The demo analysis could not be prepared. Please try again.");
+    } catch (analysisError) {
+      setError(getSafeAnalysisErrorMessage(analysisError));
       setState("error");
     }
   }

@@ -1,17 +1,23 @@
 import { DemoImageAnalyzer } from "./demo-image-analyzer";
+import { AnalysisProviderError } from "./analysis-provider-error";
+import { UnconfiguredImageAnalyzer } from "./unconfigured-image-analyzer";
 import type { AnalysisSource, ImageAnalysisInput, ImageAnalyzer, AnalysisResult } from "./types";
 
 const configuredAnalyzers: Partial<Record<AnalysisSource, ImageAnalyzer>> = {
   demo: new DemoImageAnalyzer(),
+  local: new UnconfiguredImageAnalyzer("local"),
+  cloud: new UnconfiguredImageAnalyzer("cloud"),
 };
 
-const activeAnalysisSource: AnalysisSource = "demo";
+// This is the single switch for the active provider. It remains demo until a real
+// local model or server-side cloud integration is configured.
+export const activeAnalysisSource: AnalysisSource = "demo";
 
 export function getImageAnalyzer(source: AnalysisSource = "demo"): ImageAnalyzer {
   const analyzer = configuredAnalyzers[source];
 
   if (!analyzer) {
-    throw new Error(`The ${source} image analysis provider is not configured.`);
+    throw new AnalysisProviderError("unsupported_provider", `The ${source} image analysis provider is not registered.`);
   }
 
   return analyzer;
@@ -22,4 +28,5 @@ export function analyzeImage(input: ImageAnalysisInput): Promise<AnalysisResult>
 }
 
 // Future local, cloud, or specialized analyzers only need to implement ImageAnalyzer
-// and be registered here, then selected as activeAnalysisSource. The UI remains provider-agnostic.
+// and replace their explicit placeholder here, then selected as activeAnalysisSource.
+// The UI remains provider-agnostic.

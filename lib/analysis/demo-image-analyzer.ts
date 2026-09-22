@@ -11,6 +11,7 @@ export class DemoImageAnalyzer implements ImageAnalyzer {
     return {
       category: "Flora",
       identifiedName: "Neem",
+      commonName: "Neem",
       scientificName: "Azadirachta indica",
       confidence: 92,
       description: "A common South Asian tree valued for shade, biodiversity support, and traditional agricultural use.",
@@ -19,6 +20,7 @@ export class DemoImageAnalyzer implements ImageAnalyzer {
       recommendation: "Record the observation and monitor leaf condition during routine field walks.",
       locationContext: "Not collected in demo mode. Future releases can add consent-based field context.",
       analysisSource: this.source,
+      provider: { id: "agrobioguard-demo" },
       status: "complete",
     };
   }
