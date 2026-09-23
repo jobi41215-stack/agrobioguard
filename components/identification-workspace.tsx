@@ -728,7 +728,11 @@ export function IdentificationWorkspace() {
                 ) : null}
 
                 {/* AGRICULTURAL WARNING */}
-
+                {warning && warning.category === "Fauna" && warning.severity === "warning" ? (
+  <div className="important-alert-label">
+    🚨 IMPORTANT WILDLIFE ALERT
+  </div>
+) : null}
                 {warning ? (
                   <div
                     className={getWarningClass(
@@ -736,23 +740,23 @@ export function IdentificationWorkspace() {
                     )}
                   >
                     <div className="risk-card-header">
-                      <span
-                        aria-hidden="true"
-                      >
-                        ⚠
-                      </span>
+  <span
+    aria-hidden="true"
+    className="warning-icon"
+  >
+    {warning.severity === "warning" ? "🚨" : "⚠️"}
+  </span>
 
-                      <div>
-                        <b>
-                          {warning.title}
-                        </b>
+  <div>
+    <b>
+      {warning.title}
+    </b>
 
-                        <small>
-                          {warning.severity.toUpperCase()}
-                        </small>
-                      </div>
-                    </div>
-
+    <small>
+      {warning.severity.toUpperCase()}
+    </small>
+  </div>
+</div>
                     <p>
                       {warning.message}
                     </p>
