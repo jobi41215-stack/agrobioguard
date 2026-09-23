@@ -16,8 +16,11 @@ import type {
 
 type AnalysisState = "empty" | "ready" | "loading" | "success" | "error";
 type LocationState = "unavailable" | "loading" | "success" | "error";
+type IdentificationMode = "flora" | "fauna";
 
 export function IdentificationWorkspace() {
+  const [identificationMode, setIdentificationMode] =
+    useState<IdentificationMode>("flora");
   const [preview, setPreview] = useState<string>();
   const [fileName, setFileName] = useState("");
   const [image, setImage] = useState<File>();
@@ -150,9 +153,12 @@ export function IdentificationWorkspace() {
 
     try {
       // Step 1: Identify the uploaded image.
-      const analysis = await analyzeSelectedImage({
-        image,
-      });
+      const analysis = await analyzeSelectedImage(
+  {
+    image,
+  },
+  identificationMode,
+);
 
       // Step 2: Assess agricultural/ecological risk.
       const assessment = assessRisk(
@@ -233,6 +239,48 @@ export function IdentificationWorkspace() {
           ========================== */}
 
           <div className="upload-panel">
+          <div className="analysis-mode-selector">
+  <div className="panel-label">
+    <span>IDENTIFICATION TYPE</span>
+    <b>Choose what you're analyzing</b>
+  </div>
+
+  <div className="mode-grid">
+    <button
+      type="button"
+      className={
+        identificationMode === "flora"
+          ? "mode-card selected"
+          : "mode-card"
+      }
+      onClick={() => setIdentificationMode("flora")}
+    >
+      <span className="mode-icon">🌿</span>
+      <div>
+        <small>PLANTNET AI</small>
+        <h3>Flora</h3>
+        <p>Plants, crops, trees, and weeds.</p>
+      </div>
+    </button>
+
+    <button
+      type="button"
+      className={
+        identificationMode === "fauna"
+          ? "mode-card selected"
+          : "mode-card"
+      }
+      onClick={() => setIdentificationMode("fauna")}
+    >
+      <span className="mode-icon">🐾</span>
+      <div>
+        <small>GEMINI AI</small>
+        <h3>Fauna</h3>
+        <p>Animals and wildlife observations.</p>
+      </div>
+    </button>
+  </div>
+</div>
             <div className="panel-label">
               <span>IMAGE INPUT</span>
               <b>AI-powered workflow</b>
@@ -455,7 +503,7 @@ export function IdentificationWorkspace() {
               <span>ANALYSIS RESULT</span>
 
               <b className="demo-label">
-                PLANTNET AI
+                {result?.category === "Fauna" ? "GEMINI AI" : "PLANTNET AI"}
               </b>
             </div>
 
