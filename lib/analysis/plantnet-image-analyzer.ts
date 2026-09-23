@@ -31,8 +31,16 @@ export class PlantNetImageAnalyzer implements ImageAnalyzer {
     });
 
     if (!response.ok) {
-      throw new Error("Pl@ntNet identification failed.");
-    }
+  const errorData = await response.json().catch(() => null);
+
+  console.error("PlantNet API error:", errorData);
+
+  throw new Error(
+    errorData?.details?.message ||
+      errorData?.error ||
+      "Pl@ntNet identification failed.",
+  );
+}
 
     const data = (await response.json()) as PlantNetResponse;
     const topResult = data.results?.[0];
