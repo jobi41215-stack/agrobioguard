@@ -27,34 +27,45 @@ function severityFromRisk(
 
 export function generateWarning(
   result: AnalysisResult,
-  riskAssessment: RiskAssessment,
   locationContext?: LocationContext,
+  assessment?: RiskAssessment,
 ): AgroWarning {
-  const severity = severityFromRisk(riskAssessment.level);
+  /*
+   * Use AgroBioGuard's assessment when available.
+   * This keeps the warning consistent with the risk-assessment card.
+   */
+  const riskLevel = assessment?.level ?? result.riskLevel;
+  const severity = severityFromRisk(riskLevel);
 
-  let title = "Observation recorded";
-  let message = riskAssessment.description;
-  let recommendation = riskAssessment.recommendation;
+  const message =
+    assessment?.description ??
+    result.riskDescription ??
+    "AgroBioGuard could not determine a specific agricultural or ecological risk.";
 
-  if (riskAssessment.level === "low") {
-    title = "No immediate agricultural risk identified";
-    message =
-      `${riskAssessment.description} ` +
-      "The current AgroBioGuard assessment does not identify an immediate agricultural or ecological threat.";
-  } else if (riskAssessment.level === "moderate") {
-    title = "Agricultural monitoring recommended";
-    message = riskAssessment.description;
-  } else if (riskAssessment.level === "high") {
-    title = "Agricultural risk warning";
-    message = riskAssessment.description;
-  } else if (riskAssessment.level === "unknown") {
-    title = "Assessment requires review";
-    message =
-      `${riskAssessment.description} ` +
-      "A specific agricultural or ecological risk could not be determined by the current AgroBioGuard rule set.";
-    recommendation =
-      riskAssessment.recommendation ||
-      "Review the identification before taking agricultural action.";
+  const recommendation =
+    assessment?.recommendation ??
+    result.recommendation ??
+    "Review the identification before taking agricultural action.";
+
+  let title: string;
+
+  switch (riskLevel) {
+    case "high":
+      title = "Agricultural risk warning";
+      break;
+
+    case "moderate":
+      title = "Agricultural monitoring advised";
+      break;
+
+    case "low":
+      title = "No immediate agricultural risk identified";
+      break;
+
+    case "unknown":
+    default:
+      title = "Risk assessment requires review";
+      break;
   }
 
   return {
@@ -62,7 +73,7 @@ export function generateWarning(
     title,
     message,
     recommendation,
-    category: result.category,
+    category: assessment?.category ?? result.category,
     locationContext,
     isDemo: true,
   };

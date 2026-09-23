@@ -163,8 +163,8 @@ export function IdentificationWorkspace() {
       // Step 3: Generate a user-facing warning.
       const generatedWarning = generateWarning(
        analysis,
-       assessment,
        location,
+       assessment,
       );
       setResult(analysis);
       setRiskAssessment(assessment);
