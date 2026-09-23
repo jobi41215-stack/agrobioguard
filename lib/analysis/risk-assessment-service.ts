@@ -1,5 +1,6 @@
 import type { AnalysisResult } from "./types";
 import type { LocationContext, RiskAssessment } from "./risk-types";
+import { speciesAlertRules } from "./species-alert-rules";
 
 function hasCoordinates(
   location?: LocationContext,
@@ -36,6 +37,22 @@ export function assessRisk(
   const commonName = result.commonName?.toLowerCase() ?? "";
 
   const observationName = `${name} ${commonName}`;
+  const matchedAlert = speciesAlertRules.find((rule) =>
+    rule.keywords.some((keyword) =>
+      observationName.includes(keyword.toLowerCase()),
+    ),
+  );
+
+  if (matchedAlert) {
+    return {
+      level: matchedAlert.riskLevel,
+      title: matchedAlert.title,
+      description:
+        matchedAlert.message + " " + getLocationDescription(location),
+      recommendation: matchedAlert.recommendation,
+      category: matchedAlert.category,
+    };
+  }
 
   /*
    * AgroBioGuard local rule set.
