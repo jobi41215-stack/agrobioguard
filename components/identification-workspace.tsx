@@ -162,10 +162,10 @@ export function IdentificationWorkspace() {
 
       // Step 3: Generate a user-facing warning.
       const generatedWarning = generateWarning(
-        analysis,
-        location,
+       analysis,
+       assessment,
+       location,
       );
-
       setResult(analysis);
       setRiskAssessment(assessment);
       setWarning(generatedWarning);
