@@ -1,7 +1,10 @@
 "use client";
 
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { analyzeImage as analyzeSelectedImage } from "@/lib/analysis/image-analysis-service";
+import {
+  analyzeImage as analyzeSelectedImage,
+  type IdentificationMode,
+} from "@/lib/analysis/image-analysis-service";
 import { getSafeAnalysisErrorMessage } from "@/lib/analysis/analysis-provider-error";
 import { assessRisk } from "@/lib/analysis/risk-assessment-service";
 import { generateWarning } from "@/lib/analysis/warning-service";
@@ -16,7 +19,6 @@ import type {
 
 type AnalysisState = "empty" | "ready" | "loading" | "success" | "error";
 type LocationState = "unavailable" | "loading" | "success" | "error";
-type IdentificationMode = "flora" | "fauna";
 
 export function IdentificationWorkspace() {
   const [identificationMode, setIdentificationMode] =
@@ -31,7 +33,7 @@ export function IdentificationWorkspace() {
   const [warning, setWarning] = useState<AgroWarning>();
 
   const [state, setState] = useState<AnalysisState>("empty");
-  const [error, setError] = useState("");
+    const [error, setError] = useState("");
 
   const [location, setLocation] = useState<LocationContext>();
   const [locationState, setLocationState] =
@@ -239,6 +241,38 @@ export function IdentificationWorkspace() {
           ========================== */}
 
           <div className="upload-panel">
+<div className="identification-mode">
+  <div className="panel-label">
+    <span>IDENTIFICATION TYPE</span>
+    <b>Choose what to identify</b>
+  </div>
+
+  <div className="mode-options">
+    <button
+      type="button"
+      className={
+        identificationMode === "flora"
+          ? "mode-option active"
+          : "mode-option"
+      }
+      onClick={() => setIdentificationMode("flora")}
+    >
+      🌿 Flora
+    </button>
+
+    <button
+      type="button"
+      className={
+        identificationMode === "fauna"
+          ? "mode-option active"
+          : "mode-option"
+      }
+      onClick={() => setIdentificationMode("fauna")}
+    >
+      🐾 Fauna
+    </button>
+  </div>
+</div>
           <div className="analysis-mode-selector">
   <div className="panel-label">
     <span>IDENTIFICATION TYPE</span>
