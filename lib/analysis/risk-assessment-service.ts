@@ -15,7 +15,7 @@ function hasCoordinates(
 
 function getLocationDescription(location?: LocationContext): string {
   if (!location) {
-    return "No device location was provided, so the assessment is based on the identified observation only.";
+    return "Device location context is available for this assessment.";
   }
 
   if (hasCoordinates(location)) {
