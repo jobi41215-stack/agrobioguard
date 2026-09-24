@@ -2,67 +2,230 @@
 
 import { useState } from "react";
 import { features, languages } from "@/lib/content";
+import {
+  getTranslations,
+  type SupportedLanguage,
+} from "@/lib/translations";
 import { IdentificationWorkspace } from "@/components/identification-workspace";
 
 const statuses = ["ONLINE AI", "OFFLINE AI", "SYNC PENDING"];
+const languageKeys: SupportedLanguage[] = [
+  "English",
+  "Tamil",
+  "Telugu",
+  "Hindi",
+  "Kannada",
+  "Malayalam",
+];
 
 export function ProductShell() {
   const [mode, setMode] = useState("Home & Community");
   const [status, setStatus] = useState("ONLINE AI");
-  const [language, setLanguage] = useState("English");
+  const [language, setLanguage] =
+  useState<SupportedLanguage>("English");
 
+const t = getTranslations(language);
   return (
     <main>
       <nav className="nav wrap" aria-label="Main navigation">
         <a className="brand" href="#top" aria-label="AgroBioGuard home"><span className="brand-mark">A</span><span>Agro<span>Bio</span>Guard</span></a>
         <div className="nav-links"><a href="#identify">AI Identification</a><a href="#features">Capabilities</a><a href="#farm">Farm view</a><a href="#about">About</a></div>
         <div className="nav-controls">
-          <label className="language"><span className="sr-only">Language</span><select value={language} onChange={(e) => setLanguage(e.target.value)}>{languages.map((item) => <option key={item}>{item}</option>)}</select></label>
+          <label className="language"><span className="sr-only">Language</span><select
+  value={language}
+  onChange={(e) =>
+    setLanguage(e.target.value as SupportedLanguage)
+  }
+>
+  {languages.map((label, index) => {
+    const value = languageKeys[index];
+
+    return (
+      <option key={value} value={value}>
+        {label}
+      </option>
+    );
+  })}
+</select></label>
           <button className="menu-button" aria-label="Open menu">☰</button>
         </div>
       </nav>
 
       <section className="hero wrap" id="top">
         <div className="hero-copy">
-          <p className="eyebrow"><i /> BUILT FOR FARMS &amp; NATURE</p>
-          <h1>See what matters.<br /><em>Protect what grows.</em></h1>
-          <p className="intro">AgroBioGuard brings identification, agricultural awareness, and location context into one calm, practical experience.</p>
-          <div className="hero-actions"><a className="button primary" href="#identify">Identify an image <span>→</span></a><a className="button text-button" href="#features">Explore capabilities</a></div>
-          <p className="formal-title">An AI-Based Location-Aware System for Flora and Fauna Identification and Agricultural Risk Assessment</p>
-        </div>
+          <p className="eyebrow"><i /> {t.heroEyebrow}</p>
+          <h1>
+  {t.heroTitle}
+  <br />
+  <em>{t.heroTitleAccent}</em>
+</h1>
+          <p className="intro">{t.heroIntro}</p>
+          <div className="hero-actions"><a className="button primary" href="#identify">{t.identifyImage} <span>→</span></a><a className="button text-button" href="#features">{t.exploreCapabilities}</a></div>
+        <p className="formal-title">{t.formalTitle}</p>        </div>
         <div className="hero-art" aria-label="Illustration of a protected agricultural landscape" role="img">
           <div className="sun" /><div className="hill hill-back" /><div className="hill hill-front" /><div className="field-lines" />
-          <div className="scan-card"><span className="scan-icon">⌖</span><div><small>FIELD STATUS</small><strong>All clear today</strong></div><b>98%</b></div>
+          <div className="scan-card"><span className="scan-icon">⌖</span><div><small>{t.fieldStatus}</small><strong>{t.allClear}</strong></div><b>98%</b></div>
           <div className="leaf leaf-one">✦</div><div className="leaf leaf-two">✦</div>
         </div>
       </section>
 
       <section className="status-wrap"><div className="wrap status-bar" aria-label="AI connectivity status">
         <span className="status-label">SYSTEM STATUS</span>
-        <div className="status-options">{statuses.map((item) => <button key={item} onClick={() => setStatus(item)} className={status === item ? "status active" : "status"}><i />{item}</button>)}</div>
-        <span className="status-message">{status === "ONLINE AI" ? "Connected · Demo mode" : status === "OFFLINE AI" ? "Local demo knowledge ready" : "Demo observations awaiting sync"}</span>
-      </div></section>
+         <div className="status-options">
+  <button
+    onClick={() => setStatus("ONLINE AI")}
+    className={status === "ONLINE AI" ? "status active" : "status"}
+  >
+    <i />
+    {t.onlineAI}
+  </button>
+
+  <button
+    onClick={() => setStatus("OFFLINE AI")}
+    className={status === "OFFLINE AI" ? "status active" : "status"}
+  >
+    <i />
+    {t.offlineAI}
+  </button>
+
+  <button
+    onClick={() => setStatus("SYNC PENDING")}
+    className={status === "SYNC PENDING" ? "status active" : "status"}
+  >
+    <i />
+    {t.syncPending}
+  </button>
+</div>
+
+<span className="status-message">
+  {status === "ONLINE AI"
+    ? t.connectedDemo
+    : status === "OFFLINE AI"
+      ? t.localDemo
+      : t.syncDemo}
+</span>
+              </div></section>
 
       <section className="section wrap modes" id="modes">
-        <div className="section-heading"><p className="eyebrow"><i /> CHOOSE YOUR VIEW</p><h2>One system, two ways to care.</h2></div>
-        <div className="mode-grid">{[
-          ["Home & Community", "Explore local flora, fauna, pests, and safety information.", "⌂", "For everyday discovery"],
-          ["Smart Agriculture", "Monitor crop areas and turn farm observations into action.", "⌘", "For resilient farming"],
-        ].map(([name, text, icon, label]) => <button key={name} className={mode === name ? "mode-card selected" : "mode-card"} onClick={() => setMode(name)} aria-pressed={mode === name}><span className="mode-icon">{icon}</span><div><small>{label}</small><h3>{name}</h3><p>{text}</p></div><span className="choice">{mode === name ? "✓" : ""}</span></button>)}</div>
-      </section>
+        <div className="section-heading"><p className="eyebrow"><i /> CHOOSE YOUR VIEW</p><h2>{t.twoWays}</h2></div>
+       <div className="mode-grid">
+  {[
+    [
+      "Home & Community",
+      t.homeCommunity,
+      t.homeCommunityText,
+      "⌂",
+      t.homeDiscovery,
+    ],
+    [
+      "Smart Agriculture",
+      t.smartAgriculture,
+      t.smartAgricultureText,
+      "⌘",
+      t.farmResilience,
+    ],
+  ].map(([value, name, text, icon, label]) => (
+    <button
+      key={value}
+      className={
+        mode === value ? "mode-card selected" : "mode-card"
+      }
+      onClick={() => setMode(value)}
+      aria-pressed={mode === value}
+    >
+      <span className="mode-icon">{icon}</span>
+
+      <div>
+        <small>{label}</small>
+        <h3>{name}</h3>
+        <p>{text}</p>
+      </div>
+
+      <span className="choice">
+        {mode === value ? "✓" : ""}
+      </span>
+    </button>
+  ))}
+</div>      </section>
 
       <IdentificationWorkspace language={language} />
 
-      <section className="section feature-section" id="features"><div className="wrap">
-        <div className="section-heading centered"><p className="eyebrow"><i /> DESIGNED TO GROW WITH YOU</p><h2>Nature intelligence, made approachable.</h2><p>Today’s polished product shell is ready for future camera, map, AI, and farm-data integrations.</p></div>
-        <div className="feature-grid">{features.map((feature) => <article className="feature-card" key={feature.title}><span className={`feature-icon ${feature.tint}`}>{feature.icon}</span><h3>{feature.title}</h3><p>{feature.text}</p><span className="coming">Coming next <b>→</b></span></article>)}</div>
-      </div></section>
+    <section className="section feature-section" id="features">
+  <div className="wrap">
+    <div className="section-heading centered">
+      <p className="eyebrow">
+        <i /> {t.capabilitiesEyebrow}
+      </p>
 
-      <section className="farm-section wrap" id="farm"><div className="farm-copy"><p className="eyebrow"><i /> SMART AGRICULTURE</p><h2>A clearer view of every field.</h2><p>Bring crop areas, observations, and emerging risks into a single focused farm workspace.</p><a className="button secondary" href="#top">Preview farm workspace <span>↗</span></a></div>
-        <div className="farm-preview" aria-label="Demo farm monitoring dashboard"><div className="preview-head"><span>Farm overview</span><small>Demo data</small></div><div className="map-demo"><span className="map-pin pin-one">●</span><span className="map-pin pin-two">●</span><span className="field-label">NORTH FIELD<br /><b>Healthy</b></span><span className="field-label second">RIVER PLOT<br /><b>Review</b></span></div><div className="metrics"><div><small>FIELD HEALTH</small><strong>86<span>%</span></strong></div><div><small>ACTIVE ALERTS</small><strong>02</strong></div><div><small>LAST SCAN</small><strong>Today</strong></div></div></div>
+      <h2>{t.capabilitiesTitle}</h2>
+
+      <p>{t.heroIntro}</p>
+    </div>
+
+    <div className="feature-grid">
+      {[
+        {
+          title: t.featureFloraTitle,
+          text: t.featureFloraText,
+        },
+        {
+          title: t.featureFaunaTitle,
+          text: t.featureFaunaText,
+        },
+        {
+          title: t.featurePestTitle,
+          text: t.featurePestText,
+        },
+        {
+          title: t.featureRiskTitle,
+          text: t.featureRiskText,
+        },
+        {
+          title: t.featureLocationTitle,
+          text: t.featureLocationText,
+        },
+        {
+          title: t.featureCameraTitle,
+          text: t.featureCameraText,
+        },
+      ].map((feature, index) => {
+        const original = features[index];
+
+        return (
+          <article
+            className="feature-card"
+            key={feature.title}
+          >
+            <span
+              className={`feature-icon ${original.tint}`}
+            >
+              {original.icon}
+            </span>
+
+            <h3>{feature.title}</h3>
+
+            <p>{feature.text}</p>
+
+            <span className="coming">
+              {t.comingNext} <b>→</b>
+            </span>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</section>
+      <section className="farm-section wrap" id="farm"><div className="farm-copy"><p className="eyebrow">
+  <i /> {t.smartAgricultureEyebrow}
+</p>
+
+<h2>{t.farmTitle}</h2>
+
+<p>{t.farmText}</p><a className="button secondary" href="#top">{t.previewFarm} <span>↗</span></a></div>
+        <div className="farm-preview" aria-label="Demo farm monitoring dashboard"><div className="preview-head"><span>{t.farmOverview}</span><small>{t.demoData}</small></div><div className="map-demo"><span className="map-pin pin-one">●</span><span className="map-pin pin-two">●</span><span className="field-label">{t.northField}<br /><b>{t.healthy}</b></span><span className="field-label second">{t.riverPlot}<br /><b>{t.review}</b></span></div><div className="metrics"><div><small>{t.fieldHealth}</small><strong>86<span>%</span></strong></div><div><small>{t.activeAlerts}</small><strong>02</strong></div><div><small>{t.lastScan}</small><strong>Today</strong></div></div></div>
       </section>
 
-      <footer className="footer wrap" id="about"><a className="brand" href="#top"><span className="brand-mark">A</span><span>Agro<span>Bio</span>Guard</span></a><p>AI-Powered Protection for Farms &amp; Nature</p><small>Phase 1 product foundation · Demo interface only</small></footer>
+      <footer className="footer wrap" id="about"><a className="brand" href="#top"><span className="brand-mark">A</span><span>Agro<span>Bio</span>Guard</span></a><p>{t.footerTagline}</p><small>{t.footerPhase}</small></footer>
     </main>
   );
 }
