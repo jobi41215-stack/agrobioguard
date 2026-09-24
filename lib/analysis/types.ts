@@ -29,6 +29,7 @@ export interface AnalysisResult {
 
 export interface ImageAnalysisInput {
   image: File;
+  language?: string;
 }
 
 export interface ImageAnalyzer {

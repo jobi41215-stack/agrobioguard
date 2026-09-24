@@ -20,7 +20,13 @@ import type {
 type AnalysisState = "empty" | "ready" | "loading" | "success" | "error";
 type LocationState = "unavailable" | "loading" | "success" | "error";
 
-export function IdentificationWorkspace() {
+type IdentificationWorkspaceProps = {
+  language: string;
+};
+
+export function IdentificationWorkspace({
+  language,
+}: IdentificationWorkspaceProps) {
   const [identificationMode, setIdentificationMode] =
     useState<IdentificationMode>("flora");
   const [preview, setPreview] = useState<string>();
@@ -158,6 +164,7 @@ export function IdentificationWorkspace() {
       const analysis = await analyzeSelectedImage(
   {
     image,
+    language,
   },
   identificationMode,
 );

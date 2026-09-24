@@ -51,7 +51,7 @@ export function ProductShell() {
         ].map(([name, text, icon, label]) => <button key={name} className={mode === name ? "mode-card selected" : "mode-card"} onClick={() => setMode(name)} aria-pressed={mode === name}><span className="mode-icon">{icon}</span><div><small>{label}</small><h3>{name}</h3><p>{text}</p></div><span className="choice">{mode === name ? "✓" : ""}</span></button>)}</div>
       </section>
 
-      <IdentificationWorkspace />
+      <IdentificationWorkspace language={language} />
 
       <section className="section feature-section" id="features"><div className="wrap">
         <div className="section-heading centered"><p className="eyebrow"><i /> DESIGNED TO GROW WITH YOU</p><h2>Nature intelligence, made approachable.</h2><p>Today’s polished product shell is ready for future camera, map, AI, and farm-data integrations.</p></div>

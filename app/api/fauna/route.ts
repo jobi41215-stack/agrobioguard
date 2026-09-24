@@ -16,6 +16,7 @@ export async function POST(request: Request) {
 
     const incomingFormData = await request.formData();
     const image = incomingFormData.get("image");
+    const language = incomingFormData.get("language")?.toString() || "English";
 
     if (!(image instanceof File)) {
       return NextResponse.json(
@@ -29,6 +30,8 @@ export async function POST(request: Request) {
 
     const prompt = `
 Identify the animal in this image for the AgroBioGuard application.
+
+Respond in ${language}.
 
 Return ONLY valid JSON in this exact structure:
 
@@ -45,6 +48,7 @@ Rules:
 - If it is not an animal, use "Unknown animal".
 - confidence must be a number from 0 to 100.
 - Do not invent a scientific name when uncertain.
+- Keep the JSON keys in English, but write the values in the selected language.
 - Do not include Markdown or code fences.
 `;
 

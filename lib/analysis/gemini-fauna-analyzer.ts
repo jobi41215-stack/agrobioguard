@@ -19,9 +19,11 @@ export class GeminiFaunaImageAnalyzer implements ImageAnalyzer {
 
   async analyzeImage({
     image,
+    language,
   }: ImageAnalysisInput): Promise<AnalysisResult> {
     const formData = new FormData();
     formData.append("image", image);
+    formData.append("language", language ?? "English");
 
     const response = await fetch("/api/fauna", {
       method: "POST",
