@@ -5,6 +5,8 @@ import type {
   RiskAssessment,
   WarningSeverity,
 } from "./risk-types";
+import { getWarningTitle } from "./risk-translations";
+import type { IdentificationLanguage } from "../identification-translations";
 
 function severityFromRisk(
   riskLevel: RiskAssessment["level"],
@@ -29,6 +31,7 @@ export function generateWarning(
   result: AnalysisResult,
   locationContext?: LocationContext,
   assessment?: RiskAssessment,
+  language: IdentificationLanguage = "English",
 ): AgroWarning {
   /*
    * Use AgroBioGuard's assessment when available.
@@ -47,26 +50,7 @@ export function generateWarning(
     result.recommendation ??
     "Review the identification before taking agricultural action.";
 
-  let title: string;
-
-  switch (riskLevel) {
-    case "high":
-      title = "Agricultural risk warning";
-      break;
-
-    case "moderate":
-      title = "Agricultural monitoring advised";
-      break;
-
-    case "low":
-      title = "No immediate agricultural risk identified";
-      break;
-
-    case "unknown":
-    default:
-      title = "Risk assessment requires review";
-      break;
-  }
+  const title = getWarningTitle(language, riskLevel);
 
   return {
     severity,

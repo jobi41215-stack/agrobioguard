@@ -5,6 +5,10 @@ import {
   analyzeImage as analyzeSelectedImage,
   type IdentificationMode,
 } from "@/lib/analysis/image-analysis-service";
+import {
+  getIdentificationTranslations,
+  type IdentificationLanguage,
+} from "@/lib/identification-translations";
 import { getSafeAnalysisErrorMessage } from "@/lib/analysis/analysis-provider-error";
 import { assessRisk } from "@/lib/analysis/risk-assessment-service";
 import { generateWarning } from "@/lib/analysis/warning-service";
@@ -27,6 +31,9 @@ type IdentificationWorkspaceProps = {
 export function IdentificationWorkspace({
   language,
 }: IdentificationWorkspaceProps) {
+  const t = getIdentificationTranslations(
+    language as IdentificationLanguage,
+  );
   const [identificationMode, setIdentificationMode] =
     useState<IdentificationMode>("flora");
   const [preview, setPreview] = useState<string>();
@@ -37,6 +44,8 @@ export function IdentificationWorkspace({
   const [riskAssessment, setRiskAssessment] =
     useState<RiskAssessment>();
   const [warning, setWarning] = useState<AgroWarning>();
+const [analyzedLanguage, setAnalyzedLanguage] =
+  useState<string>();
 
   const [state, setState] = useState<AnalysisState>("empty");
     const [error, setError] = useState("");
@@ -56,6 +65,18 @@ export function IdentificationWorkspace({
       }
     };
   }, [preview]);
+useEffect(() => {
+  if (
+    !image ||
+    state !== "success" ||
+    !analyzedLanguage ||
+    analyzedLanguage === language
+  ) {
+    return;
+  }
+
+  void analyzeImage();
+}, [language, image, state, analyzedLanguage]);
 
   function selectFile(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -171,20 +192,22 @@ export function IdentificationWorkspace({
 
       // Step 2: Assess agricultural/ecological risk.
       const assessment = assessRisk(
-        analysis,
-        location,
-      );
-
+  analysis,
+  location,
+  language as IdentificationLanguage,
+);
       // Step 3: Generate a user-facing warning.
       const generatedWarning = generateWarning(
        analysis,
        location,
        assessment,
+       language as IdentificationLanguage,
       );
-      setResult(analysis);
-      setRiskAssessment(assessment);
-      setWarning(generatedWarning);
-      setState("success");
+     setResult(analysis);
+setRiskAssessment(assessment);
+setWarning(generatedWarning);
+setAnalyzedLanguage(language);
+setState("success");
     } catch (analysisError) {
       setError(
         getSafeAnalysisErrorMessage(analysisError),
@@ -225,20 +248,15 @@ export function IdentificationWorkspace({
         <div className="section-heading identification-heading">
           <div>
             <p className="eyebrow">
-              <i /> AI IDENTIFICATION
-            </p>
+  <i /> {t.sectionEyebrow}
+</p>
 
-            <h2 id="identify-title">
-              Turn a field image into a clearer next step.
-            </h2>
+<h2 id="identify-title">
+  {t.sectionHeading}
+</h2>
           </div>
 
-          <p>
-            Upload a close, well-lit image or use your device
-            camera. AgroBioGuard identifies the observation and
-            then passes the result through its agricultural
-            risk-assessment workflow.
-          </p>
+          <p>{t.sectionDescription}</p>
         </div>
 
         <div className="identification-grid">
@@ -250,8 +268,8 @@ export function IdentificationWorkspace({
           <div className="upload-panel">
 <div className="identification-mode">
   <div className="panel-label">
-    <span>IDENTIFICATION TYPE</span>
-    <b>Choose what to identify</b>
+    <span>{t.identificationType}</span>
+    <b>{t.chooseWhatToIdentify}</b>
   </div>
 
   <div className="mode-options">
@@ -264,7 +282,7 @@ export function IdentificationWorkspace({
       }
       onClick={() => setIdentificationMode("flora")}
     >
-      🌿 Flora
+      🌿 {t.flora}
     </button>
 
     <button
@@ -276,58 +294,12 @@ export function IdentificationWorkspace({
       }
       onClick={() => setIdentificationMode("fauna")}
     >
-      🐾 Fauna
+      🐾 {t.fauna}
     </button>
   </div>
 </div>
-          <div className="analysis-mode-selector">
-  <div className="panel-label">
-    <span>IDENTIFICATION TYPE</span>
-    <b>Choose what you're analyzing</b>
-  </div>
 
-  <div className="mode-grid">
-    <button
-      type="button"
-      className={
-        identificationMode === "flora"
-          ? "mode-card selected"
-          : "mode-card"
-      }
-      onClick={() => setIdentificationMode("flora")}
-    >
-      <span className="mode-icon">🌿</span>
-      <div>
-        <small>PLANTNET AI</small>
-        <h3>Flora</h3>
-        <p>Plants, crops, trees, and weeds.</p>
-      </div>
-    </button>
-
-    <button
-      type="button"
-      className={
-        identificationMode === "fauna"
-          ? "mode-card selected"
-          : "mode-card"
-      }
-      onClick={() => setIdentificationMode("fauna")}
-    >
-      <span className="mode-icon">🐾</span>
-      <div>
-        <small>GEMINI AI</small>
-        <h3>Fauna</h3>
-        <p>Animals and wildlife observations.</p>
-      </div>
-    </button>
-  </div>
-</div>
-            <div className="panel-label">
-              <span>IMAGE INPUT</span>
-              <b>AI-powered workflow</b>
-            </div>
-
-            {!preview ? (
+{!preview ? (
               <div className="dropzone">
                 <span
                   className="upload-symbol"
@@ -336,17 +308,13 @@ export function IdentificationWorkspace({
                   ⌁
                 </span>
 
-                <h3>Add an observation image</h3>
+                <h3>{t.addObservationImage}</h3>
 
-                <p>
-                  Use a focused image of one plant, animal,
-                  insect, or weed for the best identification
-                  result.
-                </p>
+                <p>{t.observationImageHint}</p>
 
                 <div className="upload-actions">
                   <label className="button primary upload-trigger">
-                    Upload image
+                    {t.uploadImage}
 
                     <input
                       ref={uploadInput}
@@ -357,7 +325,7 @@ export function IdentificationWorkspace({
                   </label>
 
                   <label className="button outline upload-trigger">
-                    Use camera
+                    {t.useCamera}
 
                     <input
                       ref={cameraInput}
@@ -369,9 +337,7 @@ export function IdentificationWorkspace({
                   </label>
                 </div>
 
-                <small>
-                  JPG, PNG, WebP · maximum 10 MB
-                </small>
+                <small>{t.imageFormats}</small>
               </div>
             ) : (
               <div className="image-preview-wrap">
@@ -383,7 +349,7 @@ export function IdentificationWorkspace({
 
                 <div className="preview-details">
                   <span>
-                    <b>READY FOR ANALYSIS</b>
+                    <b>{t.readyForAnalysis}</b>
                     <small>{fileName}</small>
                   </span>
 
@@ -392,13 +358,13 @@ export function IdentificationWorkspace({
                     onClick={clearImage}
                     type="button"
                   >
-                    Remove image
+                    {t.removeImage}
                   </button>
                 </div>
 
                 <div className="upload-actions compact">
                   <label className="button outline upload-trigger">
-                    Change image
+                    {t.changeImage}
 
                     <input
                       ref={uploadInput}
@@ -409,7 +375,7 @@ export function IdentificationWorkspace({
                   </label>
 
                   <label className="button outline upload-trigger">
-                    Use camera
+                    {t.useCamera}
 
                     <input
                       ref={cameraInput}
@@ -438,15 +404,14 @@ export function IdentificationWorkspace({
                   </span>
 
                   <div>
-                    <strong>
-                      Location-aware assessment
-                    </strong>
+                  <strong>
+  {t.locationAwareAssessment}
+</strong>
 
-                    <p>
-                      Allow AgroBioGuard to use your current
-                      location for contextual risk assessment.
-                    </p>
-                  </div>
+<p>
+  {t.locationDescription}
+</p>
+                                     </div>
                 </div>
 
                 <button
@@ -456,17 +421,17 @@ export function IdentificationWorkspace({
                   type="button"
                 >
                   {locationState === "loading"
-                    ? "Getting location..."
-                    : locationState === "success"
-                      ? "Update location"
-                      : "Use my location"}
+  ? t.gettingLocation
+  : locationState === "success"
+    ? t.updateLocation
+    : t.useMyLocation}
                 </button>
               </div>
 
               {locationState === "success" && location ? (
                 <div className="location-success">
                   <span>
-                    ✓ Location available
+                    ✓ {t.locationAvailable}
                   </span>
 
                   {hasCoordinates ? (
@@ -478,7 +443,7 @@ export function IdentificationWorkspace({
                     </small>
                   ) : (
                     <small>
-                      Coordinates are not available.
+                      {t.coordinatesUnavailable}
                     </small>
                   )}
                 </div>
@@ -495,8 +460,7 @@ export function IdentificationWorkspace({
 
               {locationState === "unavailable" ? (
                 <small className="location-note">
-                  Location is optional. You can analyze an
-                  image without sharing your location.
+                  {t.locationOptional}
                 </small>
               ) : null}
             </div>
@@ -525,9 +489,8 @@ export function IdentificationWorkspace({
               type="button"
             >
               {state === "loading"
-                ? "Analyzing image..."
-                : "Analyze image"}
-
+  ? t.analyzingImage
+  : t.analyzeImage}
               <span>→</span>
             </button>
           </div>
@@ -541,7 +504,7 @@ export function IdentificationWorkspace({
             aria-live="polite"
           >
             <div className="panel-label">
-              <span>ANALYSIS RESULT</span>
+              <span>{t.analysisResult}</span>
 
               <b className="demo-label">
                 {result?.category === "Fauna" ? "GEMINI AI" : "PLANTNET AI"}
@@ -557,15 +520,9 @@ export function IdentificationWorkspace({
                   ◌
                 </span>
 
-                <h3>
-                  Your identification will appear here.
-                </h3>
+                <h3>{t.emptyResultHeading}</h3>
 
-                <p>
-                  Results will include the identified
-                  species, confidence, AgroBioGuard risk
-                  context, and a practical recommendation.
-                </p>
+<p>{t.emptyResultText}</p>
               </div>
             ) : null}
 
@@ -577,16 +534,11 @@ export function IdentificationWorkspace({
                   ◎
                 </span>
 
-                <h3>
-                  Image ready for analysis.
-                </h3>
+               <h3>{t.imageReadyHeading}</h3>
 
-                <p>
-                  Select{" "}
-                  <b>Analyze image</b>{" "}
-                  to identify the uploaded observation.
-                </p>
-              </div>
+<p>
+  {t.imageReadyText}
+</p>              </div>
             ) : null}
 
             {/* LOADING */}
@@ -595,15 +547,9 @@ export function IdentificationWorkspace({
               <div className="result-loading">
                 <span className="loader" />
 
-                <h3>
-                  Analyzing your observation
-                </h3>
+               <h3>{t.analyzingHeading}</h3>
 
-                <p>
-                  Plant identification and
-                  AgroBioGuard assessment are being
-                  processed.
-                </p>
+<p>{t.analyzingText}</p>
               </div>
             ) : null}
 
@@ -616,13 +562,12 @@ export function IdentificationWorkspace({
 
                 <div className="result-title">
                   <span className="category-pill">
-                    {result?.category}
-                  </span>
-
+  {result?.category === "Fauna" ? t.fauna : t.flora}
+</span>
                   {result?.confidence !==
                   undefined ? (
                     <span className="confidence">
-                      Identification confidence{" "}
+                      {t.identificationConfidence}{" "}
                       <b>
                         {result.confidence}%
                       </b>
@@ -647,7 +592,7 @@ export function IdentificationWorkspace({
                 <dl className="result-details">
                   <div>
                     <dt>
-                      Identification source
+                      {t.identificationSource}
                     </dt>
 
                     <dd>
@@ -657,7 +602,7 @@ export function IdentificationWorkspace({
                   </div>
 
                   <div>
-                    <dt>Common name</dt>
+                    <dt>{t.commonName}</dt>
 
                     <dd>
                       {result?.commonName ??
@@ -668,13 +613,13 @@ export function IdentificationWorkspace({
 
                   <div>
                     <dt>
-                      Location &amp; context
+                      {t.locationAndContext}
                     </dt>
 
                     <dd>
                       {location ? (
                         <>
-                          Device location available.
+                          {t.deviceLocationAvailable}
                           <br />
 
                           {hasCoordinates ? (
@@ -694,7 +639,7 @@ export function IdentificationWorkspace({
                           )}
                         </>
                       ) : (
-                        "Location was not provided."
+                        t.locationNotProvided
                       )}
                     </dd>
                   </div>
@@ -706,7 +651,7 @@ export function IdentificationWorkspace({
                   <div className="risk-assessment-card">
                     <div className="risk-assessment-header">
                       <span>
-                        AGROBIOGUARD RISK ASSESSMENT
+                        {t.riskAssessment}
                       </span>
 
                       <strong>
@@ -724,7 +669,7 @@ export function IdentificationWorkspace({
 
                     <div className="risk-recommendation">
                       <b>
-                        Recommended action
+                        {t.recommendedAction}
                       </b>
 
                       <span>
@@ -769,7 +714,7 @@ export function IdentificationWorkspace({
                     </p>
 
                     <div className="warning-recommendation">
-                      <b>Action</b>
+                      <b>{t.warningAction}</b>
 
                       <span>
                         {warning.recommendation}
@@ -788,23 +733,20 @@ export function IdentificationWorkspace({
 
                     <div>
                       <b>
-                        LOCATION CONTEXT
+                        {t.locationContextCard}
                       </b>
 
                       <small>
                         {location
-                          ? "Device location used"
-                          : "No location provided"}
+  ? t.deviceLocationUsed
+  : t.noLocationProvided}
                       </small>
                     </div>
                   </div>
 
                   {location ? (
                     <p>
-                      AgroBioGuard received the device
-                      coordinates for location-aware
-                      processing.
-                      <br />
+                      {t.locationReceived}                      <br />
 
                       {hasCoordinates ? (
                         <strong>
@@ -818,15 +760,13 @@ export function IdentificationWorkspace({
                         </strong>
                       ) : (
                         <strong>
-                          Coordinates are not available.
+                           {t.coordinatesUnavailable}
                         </strong>
                       )}
                     </p>
                   ) : (
                     <p>
-                      No device location was shared.
-                      The identification can still be
-                      reviewed without location data.
+                      {t.noDeviceLocation}
                     </p>
                   )}
                 </div>
@@ -838,14 +778,11 @@ export function IdentificationWorkspace({
 
                   <p>
                     <b>
-                      AI identification +
-                      AgroBioGuard assessment.
+                      {t.analysisNoteTitle}
                     </b>{" "}
-                    Plant identification is provided
-                    by the PlantNet identification
-                    service. Agricultural risk
-                    assessment is handled separately
-                    by AgroBioGuard.
+                    {result?.category === "Fauna"
+  ? t.faunaNote
+  : t.floraNote}
                   </p>
                 </div>
 

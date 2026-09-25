@@ -128,6 +128,7 @@ imageFormats: "JPG, PNG, WebP · maximum 10 MB",
 readyForAnalysis: "READY FOR ANALYSIS",
 removeImage: "Remove image",
 changeImage: "Change image",
+today: "Today",
     footerTagline: "AI-Powered Protection for Farms & Nature",
   },
 
@@ -252,6 +253,7 @@ imageFormats: "JPG, PNG, WebP · அதிகபட்சம் 10 MB",
 readyForAnalysis: "பகுப்பாய்வுக்கு தயாராக உள்ளது",
 removeImage: "படத்தை அகற்றவும்",
 changeImage: "படத்தை மாற்றவும்",
+today: "இன்று",
     footerTagline: "பண்ணைகள் மற்றும் இயற்கைக்கான AI பாதுகாப்பு",
   },
 
@@ -367,6 +369,7 @@ featureCameraText:
 
 footerPhase:
   "దశ 1 ఉత్పత్తి పునాది · డెమో ఇంటర్‌ఫేస్ మాత్రమే",
+today: "ఈ రోజు",
     footerTagline: "పొలాలు మరియు ప్రకృతికి AI ఆధారిత రక్షణ",
   },
 
@@ -482,6 +485,7 @@ featureCameraText:
 
 footerPhase:
   "चरण 1 उत्पाद आधार · केवल डेमो इंटरफ़ेस",
+today: "आज",
     footerTagline: "खेतों और प्रकृति के लिए AI-संचालित सुरक्षा",
   },
 
@@ -597,6 +601,7 @@ featureCameraText:
 
 footerPhase:
   "ಹಂತ 1 ಉತ್ಪನ್ನ ಅಡಿಪಾಯ · ಡೆಮೋ ಇಂಟರ್‌ಫೇಸ್ ಮಾತ್ರ",
+today: "ಇಂದು",
     footerTagline: "ಕೃಷಿ ಕ್ಷೇತ್ರಗಳು ಮತ್ತು ಪ್ರಕೃತಿಗಾಗಿ AI ರಕ್ಷಣೆ",
   },
 
@@ -712,6 +717,7 @@ featureCameraText:
 
 footerPhase:
   "ഘട്ടം 1 ഉൽപ്പന്ന അടിത്തറ · ഡെമോ ഇന്റർഫേസ് മാത്രം",
+today: "ഇന്ന്",
     footerTagline: "കൃഷിയിടങ്ങൾക്കും പ്രകൃതിക്കും AI അധിഷ്ഠിത സംരക്ഷണം",
   },
 } as const;

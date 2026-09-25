@@ -29,8 +29,13 @@ const t = getTranslations(language);
     <main>
       <nav className="nav wrap" aria-label="Main navigation">
         <a className="brand" href="#top" aria-label="AgroBioGuard home"><span className="brand-mark">A</span><span>Agro<span>Bio</span>Guard</span></a>
-        <div className="nav-links"><a href="#identify">AI Identification</a><a href="#features">Capabilities</a><a href="#farm">Farm view</a><a href="#about">About</a></div>
-        <div className="nav-controls">
+<div className="nav-links">
+  <a href="#identify">{t.navIdentification}</a>
+  <a href="#features">{t.navCapabilities}</a>
+  <a href="#farm">{t.navFarm}</a>
+  <a href="#about">{t.navAbout}</a>
+</div>
+                <div className="nav-controls">
           <label className="language"><span className="sr-only">Language</span><select
   value={language}
   onChange={(e) =>
@@ -70,7 +75,7 @@ const t = getTranslations(language);
       </section>
 
       <section className="status-wrap"><div className="wrap status-bar" aria-label="AI connectivity status">
-        <span className="status-label">SYSTEM STATUS</span>
+        <span className="status-label">{t.systemStatus}</span>
          <div className="status-options">
   <button
     onClick={() => setStatus("ONLINE AI")}
@@ -107,7 +112,7 @@ const t = getTranslations(language);
               </div></section>
 
       <section className="section wrap modes" id="modes">
-        <div className="section-heading"><p className="eyebrow"><i /> CHOOSE YOUR VIEW</p><h2>{t.twoWays}</h2></div>
+        <div className="section-heading"><p className="eyebrow"><i /> {t.chooseView}</p><h2>{t.twoWays}</h2></div>
        <div className="mode-grid">
   {[
     [
@@ -222,7 +227,7 @@ const t = getTranslations(language);
 <h2>{t.farmTitle}</h2>
 
 <p>{t.farmText}</p><a className="button secondary" href="#top">{t.previewFarm} <span>↗</span></a></div>
-        <div className="farm-preview" aria-label="Demo farm monitoring dashboard"><div className="preview-head"><span>{t.farmOverview}</span><small>{t.demoData}</small></div><div className="map-demo"><span className="map-pin pin-one">●</span><span className="map-pin pin-two">●</span><span className="field-label">{t.northField}<br /><b>{t.healthy}</b></span><span className="field-label second">{t.riverPlot}<br /><b>{t.review}</b></span></div><div className="metrics"><div><small>{t.fieldHealth}</small><strong>86<span>%</span></strong></div><div><small>{t.activeAlerts}</small><strong>02</strong></div><div><small>{t.lastScan}</small><strong>Today</strong></div></div></div>
+        <div className="farm-preview" aria-label="Demo farm monitoring dashboard"><div className="preview-head"><span>{t.farmOverview}</span><small>{t.demoData}</small></div><div className="map-demo"><span className="map-pin pin-one">●</span><span className="map-pin pin-two">●</span><span className="field-label">{t.northField}<br /><b>{t.healthy}</b></span><span className="field-label second">{t.riverPlot}<br /><b>{t.review}</b></span></div><div className="metrics"><div><small>{t.fieldHealth}</small><strong>86<span>%</span></strong></div><div><small>{t.activeAlerts}</small><strong>02</strong></div><div><small>{t.lastScan}</small><strong>{t.today}</strong></div></div></div>
       </section>
 
       <footer className="footer wrap" id="about"><a className="brand" href="#top"><span className="brand-mark">A</span><span>Agro<span>Bio</span>Guard</span></a><p>{t.footerTagline}</p><small>{t.footerPhase}</small></footer>

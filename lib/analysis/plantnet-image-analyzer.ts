@@ -3,6 +3,10 @@ import type {
   ImageAnalysisInput,
   ImageAnalyzer,
 } from "./types";
+import {
+  getIdentificationTranslations,
+  type IdentificationLanguage,
+} from "@/lib/identification-translations";
 
 type PlantNetResult = {
   species?: {
@@ -19,9 +23,13 @@ type PlantNetResponse = {
 export class PlantNetImageAnalyzer implements ImageAnalyzer {
   readonly source = "cloud" as const;
 
-  async analyzeImage({
+ async analyzeImage({
     image,
+    language,
   }: ImageAnalysisInput): Promise<AnalysisResult> {
+const t = getIdentificationTranslations(
+  language as IdentificationLanguage,
+);
     const formData = new FormData();
     formData.append("image", image);
 
@@ -66,8 +74,7 @@ export class PlantNetImageAnalyzer implements ImageAnalyzer {
       commonName,
       scientificName,
       confidence,
-      description:
-        "This plant identification was generated using the Pl@ntNet identification service.",
+      description: t.floraNote,
       riskLevel: "unknown",
       riskDescription:
         "Agricultural or ecological risk has not yet been assessed.",
