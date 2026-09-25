@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { features, languages } from "@/lib/content";
 import {
   getTranslations,
@@ -23,10 +23,12 @@ export function ProductShell() {
   "Home & Community" | "Smart Agriculture"
 >("Home & Community");
   const [status, setStatus] = useState("ONLINE AI");
+const [pendingObservations, setPendingObservations] =
+  useState(0);
   const [language, setLanguage] =
   useState<SupportedLanguage>("English");
-
 const t = getTranslations(language);
+
   return (
     <main>
       <nav className="nav wrap" aria-label="Main navigation">
@@ -101,6 +103,9 @@ const t = getTranslations(language);
   >
     <i />
     {t.syncPending}
+      {pendingObservations > 0
+  ? ` (${pendingObservations})`
+  : ""}
   </button>
 </div>
 
@@ -212,25 +217,27 @@ const t = getTranslations(language);
         const original = features[index];
 
         return (
-          <article
-            className="feature-card"
-            key={feature.title}
-          >
-            <span
-              className={`feature-icon ${original.tint}`}
-            >
-              {original.icon}
-            </span>
+  <a
+    className="feature-card"
+    key={feature.title}
+    href={index === 5 ? "#farm" : "#identify"}
+    aria-label={`${feature.title} workspace`}
+  >
+    <span
+      className={`feature-icon ${original.tint}`}
+    >
+      {original.icon}
+    </span>
 
-            <h3>{feature.title}</h3>
+    <h3>{feature.title}</h3>
 
-            <p>{feature.text}</p>
+    <p>{feature.text}</p>
 
-            <span className="coming">
-              {t.comingNext} <b>→</b>
-            </span>
-          </article>
-        );
+    <span className="coming">
+      {t.comingNext} <b>→</b>
+    </span>
+  </a>
+);
       })}
     </div>
   </div>

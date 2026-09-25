@@ -32,6 +32,14 @@ import type {
 
 type AnalysisState = "empty" | "ready" | "loading" | "success" | "error";
 type LocationState = "unavailable" | "loading" | "success" | "error";
+type SavedObservation = {
+  id: string;
+  species: string;
+  category: string;
+  risk: string;
+  source: "local";
+  savedAt: string;
+};
 type IdentificationWorkspaceProps = {
   language: string;
   connectivity: "online" | "offline";
@@ -67,6 +75,8 @@ const [analyzedLanguage, setAnalyzedLanguage] =
   useState<string>();
 
   const [state, setState] = useState<AnalysisState>("empty");
+const [savedObservations, setSavedObservations] =
+  useState<SavedObservation[]>([]);
     const [error, setError] = useState("");
 
   const [location, setLocation] = useState<LocationContext>();
@@ -84,6 +94,27 @@ const [analyzedLanguage, setAnalyzedLanguage] =
       }
     };
   }, [preview]);
+useEffect(() => {
+  const saved = localStorage.getItem(
+    "agrobioguard-observations",
+  );
+
+  if (!saved) {
+    return;
+  }
+
+  try {
+    const parsed = JSON.parse(saved);
+
+    if (Array.isArray(parsed)) {
+      setSavedObservations(parsed);
+    }
+  } catch {
+    localStorage.removeItem(
+      "agrobioguard-observations",
+    );
+  }
+}, []);
 
 
 
@@ -253,6 +284,33 @@ setRiskAssessment(assessment);
 setWarning(generatedWarning);
 setAgroAlert(generatedAlert ?? undefined);
 setAnalyzedLanguage(language);
+
+if (connectivity === "offline") {
+  const observation: SavedObservation = {
+    id: `${Date.now()}-${analysis.identifiedName}`,
+    species: analysis.identifiedName,
+    category: analysis.category,
+    risk: assessment.level,
+    source: "local",
+    savedAt: new Date().toISOString(),
+  };
+
+  const updated = [
+    observation,
+    ...savedObservations,
+  ].slice(0, 10);
+
+  setSavedObservations(updated);
+
+  localStorage.setItem(
+    "agrobioguard-observations",
+    JSON.stringify(updated),
+  );
+window.dispatchEvent(
+  new Event("agrobioguard-observation-saved"),
+);
+}
+
 setState("success");
     } catch (analysisError) {
       setError(
@@ -812,7 +870,46 @@ setState("success");
     </div>
   </div>
 ) : null}
+{connectivity === "offline" &&
+savedObservations.length > 0 ? (
+  <div className="observation-history-card">
+    <div className="location-result-header">
+      <span aria-hidden="true">💾</span>
 
+      <div>
+        <b>LOCAL OBSERVATION HISTORY</b>
+        <small>
+          {savedObservations.length} observation
+          {savedObservations.length === 1 ? "" : "s"} saved
+        </small>
+      </div>
+    </div>
+
+    <div className="observation-list">
+      {savedObservations.slice(0, 5).map(
+        (observation) => (
+          <div
+            className="observation-item"
+            key={observation.id}
+          >
+            <strong>
+              {observation.species}
+            </strong>
+
+            <span>
+              {observation.category} · Risk{" "}
+              {observation.risk.toUpperCase()}
+            </span>
+
+            <small>
+              Awaiting sync
+            </small>
+          </div>
+        ),
+      )}
+    </div>
+  </div>
+) : null}
                 {/* LOCATION CONTEXT */}
 
                 <div className="location-result-card">
