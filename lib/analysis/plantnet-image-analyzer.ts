@@ -31,7 +31,7 @@ const t = getIdentificationTranslations(
   language as IdentificationLanguage,
 );
     const formData = new FormData();
-    formData.append("image", image);
+formData.append("image", image);
 
     const response = await fetch("/api/plantnet", {
       method: "POST",
@@ -62,6 +62,46 @@ const t = getIdentificationTranslations(
 
     const commonName =
       topResult.species.commonNames?.[0] ?? scientificName;
+let localizedName = commonName;
+
+if (language && language !== "English") {
+  try {
+    const translationResponse = await fetch(
+      "/api/plant-translate",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          commonName,
+          scientificName,
+          language,
+        }),
+      },
+    );
+
+    if (translationResponse.ok) {
+      const translationData =
+        (await translationResponse.json()) as {
+          translatedName?: string;
+        };
+
+      if (translationData.translatedName?.trim()) {
+        localizedName = translationData.translatedName.trim();
+      }
+    } else {
+      console.warn(
+        "Plant name translation failed; using PlantNet name.",
+      );
+    }
+  } catch (translationError) {
+    console.warn(
+      "Plant name translation unavailable; using PlantNet name.",
+      translationError,
+    );
+  }
+}
 
     const confidence =
       typeof topResult.score === "number"
@@ -70,8 +110,8 @@ const t = getIdentificationTranslations(
 
     return {
       category: "Flora",
-      identifiedName: commonName,
-      commonName,
+      identifiedName: localizedName,
+      commonName: localizedName,
       scientificName,
       confidence,
       description: t.floraNote,

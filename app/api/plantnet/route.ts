@@ -17,7 +17,9 @@ export async function POST(request: Request) {
     }
 
     const incomingFormData = await request.formData();
-    const image = incomingFormData.get("image");
+const image = incomingFormData.get("image");
+const language =
+  incomingFormData.get("language")?.toString() || "English";
 
     if (!(image instanceof File)) {
       return NextResponse.json(
@@ -32,10 +34,10 @@ export async function POST(request: Request) {
 
     formData.append("images", image);
     formData.append("organs", "auto");
-
+    
     const response = await fetch(
-      `${PLANTNET_API_URL}?api-key=${encodeURIComponent(apiKey)}`,
-      {
+    `${PLANTNET_API_URL}?api-key=${encodeURIComponent(apiKey)}`,
+           {
         method: "POST",
         body: formData,
       },
