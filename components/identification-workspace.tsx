@@ -169,7 +169,25 @@ const [analyzedLanguage, setAnalyzedLanguage] =
       );
     }
   }
+  async function sendLocalAlert(alert: AgroAlert) {
+  if (connectivity !== "offline") {
+    return;
+  }
 
+  if (!("Notification" in window)) {
+    return;
+  }
+
+  if (Notification.permission === "default") {
+    await Notification.requestPermission();
+  }
+
+  if (Notification.permission === "granted") {
+    new Notification("AgroBioGuard Danger Alert", {
+      body: `${alert.species}: ${alert.message}`,
+    });
+  }
+}
   async function analyzeImage() {
     if (!image) {
       setError("Add an image before starting an analysis.");
@@ -207,17 +225,23 @@ const [analyzedLanguage, setAnalyzedLanguage] =
 );
       // Step 3: Generate a user-facing warning.
       const generatedWarning = generateWarning(
-       analysis,
-       location,
-       assessment,
-       language as IdentificationLanguage,
-      );
-      const generatedAlert = createAgroAlert(
+  analysis,
+  location,
+  assessment,
+  language as IdentificationLanguage,
+);
+
+const generatedAlert = createAgroAlert(
   analysis,
   assessment,
   location,
 );
-     setResult(analysis);
+
+if (generatedAlert) {
+  await sendLocalAlert(generatedAlert);
+}
+
+setResult(analysis);
 setRiskAssessment(assessment);
 setWarning(generatedWarning);
 setAgroAlert(generatedAlert ?? undefined);
