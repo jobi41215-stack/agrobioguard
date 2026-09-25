@@ -153,7 +153,14 @@ const t = getTranslations(language);
   ))}
 </div>      </section>
 
-      <IdentificationWorkspace language={language} />
+      <IdentificationWorkspace
+  language={language}
+  connectivity={
+    status === "ONLINE AI"
+      ? "online"
+      : "offline"
+  }
+/>
 
     <section className="section feature-section" id="features">
   <div className="wrap">

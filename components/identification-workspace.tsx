@@ -17,6 +17,7 @@ import {
   createAgroAlert,
   type AgroAlert,
 } from "@/lib/analysis/alert-service";
+import { OfflineDemoImageAnalyzer } from "@/lib/analysis/offline-demo-analyzer";
 
 import type { AnalysisResult } from "@/lib/analysis/types";
 import type {
@@ -30,11 +31,13 @@ type LocationState = "unavailable" | "loading" | "success" | "error";
 
 type IdentificationWorkspaceProps = {
   language: string;
+  connectivity: "online" | "offline";
 };
-
 export function IdentificationWorkspace({
   language,
+  connectivity,
 }: IdentificationWorkspaceProps) {
+
   const t = getIdentificationTranslations(
     language as IdentificationLanguage,
   );
@@ -48,10 +51,7 @@ export function IdentificationWorkspace({
   const [riskAssessment, setRiskAssessment] =
     useState<RiskAssessment>();
   const [warning, setWarning] = useState<AgroWarning>();
-const [smsPhoneNumber, setSmsPhoneNumber] = useState("");
-const [smsEnabled, setSmsEnabled] = useState(false);
-const [smsWildlifeEnabled, setSmsWildlifeEnabled] = useState(true);
-const [smsAgricultureEnabled, setSmsAgricultureEnabled] = useState(true);
+
 const [smsPreferencesLoaded, setSmsPreferencesLoaded] =
   useState(false);
 const [agroAlert, setAgroAlert] =
@@ -184,14 +184,21 @@ const [analyzedLanguage, setAnalyzedLanguage] =
 
     try {
       // Step 1: Identify the uploaded image.
-      const analysis = await analyzeSelectedImage(
-  {
-    image,
-    language,
-  },
-  identificationMode,
-);
-
+     const analysis =
+  connectivity === "offline"
+    ? await new OfflineDemoImageAnalyzer(
+        identificationMode,
+      ).analyzeImage({
+        image,
+        language,
+      })
+    : await analyzeSelectedImage(
+        {
+          image,
+          language,
+        },
+        identificationMode,
+      );
       // Step 2: Assess agricultural/ecological risk.
       const assessment = assessRisk(
   analysis,
@@ -472,101 +479,7 @@ setState("success");
                 </small>
               ) : null}
             </div>
-            {/* SMS ALERT PREFERENCES */}
-
-<div className="sms-alert-panel">
-  <div className="risk-card-header">
-    <span
-      aria-hidden="true"
-      className="warning-icon"
-    >
-      📱
-    </span>
-
-    <div>
-      <b>AGROBIOGUARD SMS ALERTS</b>
-      <small>NOTIFICATION SETTINGS</small>
-    </div>
-  </div>
-
-  <div className="sms-field">
-    <label htmlFor="sms-phone">
-      Phone number
-    </label>
-
-    <input
-      id="sms-phone"
-      type="tel"
-      inputMode="tel"
-      placeholder="+91 9876543210"
-      value={smsPhoneNumber}
-      onChange={(event) =>
-        setSmsPhoneNumber(event.target.value)
-      }
-    />
-  </div>
-
-  <label className="sms-option">
-    <input
-      type="checkbox"
-      checked={smsEnabled}
-      onChange={(event) =>
-        setSmsEnabled(event.target.checked)
-      }
-    />
-
-    <span>
-      Enable SMS alerts
-    </span>
-  </label>
-
-  <label className="sms-option">
-    <input
-      type="checkbox"
-      checked={smsWildlifeEnabled}
-      onChange={(event) =>
-        setSmsWildlifeEnabled(event.target.checked)
-      }
-      disabled={!smsEnabled}
-    />
-
-    <span>
-      Wildlife danger alerts
-    </span>
-  </label>
-
-  <label className="sms-option">
-    <input
-      type="checkbox"
-      checked={smsAgricultureEnabled}
-      onChange={(event) =>
-        setSmsAgricultureEnabled(
-          event.target.checked,
-        )
-      }
-      disabled={!smsEnabled}
-    />
-
-    <span>
-      Agricultural danger alerts
-    </span>
-  </label>
-
-  <div className="sms-status">
-    <b>SMS status</b>
-
-    <span>
-      {smsEnabled && smsPhoneNumber.trim()
-        ? "Ready"
-        : "Not configured"}
-    </span>
-  </div>
-
-  <small>
-    SMS alerts will use your selected AgroBioGuard language.
-  </small>
-</div>
-
+            
             {/* =========================
                 GENERAL ERROR
             ========================== */}
@@ -607,11 +520,14 @@ setState("success");
           >
             <div className="panel-label">
               <span>{t.analysisResult}</span>
-
-              <b className="demo-label">
-                {result?.category === "Fauna" ? "GEMINI AI" : "PLANTNET AI"}
-              </b>
-            </div>
+<b className="demo-label">
+  {result?.analysisSource === "local"
+    ? "LOCAL OFFLINE DEMO"
+    : result?.category === "Fauna"
+      ? "GEMINI AI"
+      : "PLANTNET AI"}
+</b>
+                          </div>
 
             {/* EMPTY / ERROR */}
 
@@ -818,97 +734,6 @@ setState("success");
         {agroAlert.location.longitude.toFixed(6)}
       </p>
     ) : null}
-{/* SMS ALERT PREFERENCES */}
-<div className="sms-alert-panel">
-  <div className="risk-card-header">
-    <span
-      aria-hidden="true"
-      className="warning-icon"
-    >
-      📱
-    </span>
-
-    <div>
-      <b>AGROBIOGUARD SMS ALERTS</b>
-      <small>NOTIFICATION SETTINGS</small>
-    </div>
-  </div>
-
-  <div className="sms-field">
-    <label htmlFor="sms-phone">
-      Phone number
-    </label>
-
-    <input
-      id="sms-phone"
-      type="tel"
-      inputMode="tel"
-      placeholder="+91 9876543210"
-      value={smsPhoneNumber}
-      onChange={(event) =>
-        setSmsPhoneNumber(event.target.value)
-      }
-    />
-  </div>
-
-  <label className="sms-option">
-    <input
-      type="checkbox"
-      checked={smsEnabled}
-      onChange={(event) =>
-        setSmsEnabled(event.target.checked)
-      }
-    />
-    <span>
-      Enable SMS alerts
-    </span>
-  </label>
-
-  <label className="sms-option">
-    <input
-      type="checkbox"
-      checked={smsWildlifeEnabled}
-      onChange={(event) =>
-        setSmsWildlifeEnabled(event.target.checked)
-      }
-      disabled={!smsEnabled}
-    />
-    <span>
-      Wildlife danger alerts
-    </span>
-  </label>
-
-  <label className="sms-option">
-    <input
-      type="checkbox"
-      checked={smsAgricultureEnabled}
-      onChange={(event) =>
-        setSmsAgricultureEnabled(
-          event.target.checked,
-        )
-      }
-      disabled={!smsEnabled}
-    />
-    <span>
-      Agricultural danger alerts
-    </span>
-  </label>
-
-  <div className="sms-status">
-    <b>SMS status</b>
-
-    <span>
-      {smsEnabled && smsPhoneNumber.trim()
-        ? "Ready"
-        : "Not configured"}
-    </span>
-  </div>
-
-  <small>
-    SMS language will follow the language selected in
-    AgroBioGuard.
-  </small>
-</div>
     <div className="warning-recommendation">
       <b>{t.warningAction}</b>
 
