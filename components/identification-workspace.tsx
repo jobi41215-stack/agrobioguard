@@ -305,6 +305,25 @@ setState("success");
           ========================== */}
 
           <div className="upload-panel">
+<div className={`ai-mode-banner ${connectivity}`}>
+  <div className="ai-mode-icon">
+    {connectivity === "online" ? "☁️" : "📡"}
+  </div>
+
+  <div>
+    <strong>
+      {connectivity === "online"
+        ? "ONLINE AI MODE"
+        : "OFFLINE AI MODE"}
+    </strong>
+
+    <span>
+      {connectivity === "online"
+        ? "Cloud AI services are available for image analysis."
+        : "Local analysis is active. No cloud AI API is used."}
+    </span>
+  </div>
+</div>
 <div className="identification-mode">
   <div className="panel-label">
     <span>{t.identificationType}</span>
