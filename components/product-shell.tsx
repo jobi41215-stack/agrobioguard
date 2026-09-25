@@ -19,7 +19,9 @@ const languageKeys: SupportedLanguage[] = [
 ];
 
 export function ProductShell() {
-  const [mode, setMode] = useState("Home & Community");
+  const [mode, setMode] = useState<
+  "Home & Community" | "Smart Agriculture"
+>("Home & Community");
   const [status, setStatus] = useState("ONLINE AI");
   const [language, setLanguage] =
   useState<SupportedLanguage>("English");
@@ -135,7 +137,13 @@ const t = getTranslations(language);
       className={
         mode === value ? "mode-card selected" : "mode-card"
       }
-      onClick={() => setMode(value)}
+      onClick={() =>
+  setMode(
+    value as
+      | "Home & Community"
+      | "Smart Agriculture",
+  )
+}
       aria-pressed={mode === value}
     >
       <span className="mode-icon">{icon}</span>
@@ -160,8 +168,8 @@ const t = getTranslations(language);
       ? "online"
       : "offline"
   }
+  viewMode={mode}
 />
-
     <section className="section feature-section" id="features">
   <div className="wrap">
     <div className="section-heading centered">

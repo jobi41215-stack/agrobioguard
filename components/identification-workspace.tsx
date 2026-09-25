@@ -9,6 +9,10 @@ import {
   getIdentificationTranslations,
   type IdentificationLanguage,
 } from "@/lib/identification-translations";
+import {
+  getTranslations,
+  type SupportedLanguage,
+} from "@/lib/translations";
 import { getSafeAnalysisErrorMessage } from "@/lib/analysis/analysis-provider-error";
 import { assessRisk } from "@/lib/analysis/risk-assessment-service";
 import { generateWarning } from "@/lib/analysis/warning-service";
@@ -28,19 +32,22 @@ import type {
 
 type AnalysisState = "empty" | "ready" | "loading" | "success" | "error";
 type LocationState = "unavailable" | "loading" | "success" | "error";
-
 type IdentificationWorkspaceProps = {
   language: string;
   connectivity: "online" | "offline";
+  viewMode: "Home & Community" | "Smart Agriculture";
 };
 export function IdentificationWorkspace({
   language,
   connectivity,
+  viewMode,
 }: IdentificationWorkspaceProps) {
-
   const t = getIdentificationTranslations(
     language as IdentificationLanguage,
   );
+const appT = getTranslations(
+  language as SupportedLanguage,
+);
   const [identificationMode, setIdentificationMode] =
     useState<IdentificationMode>("flora");
   const [preview, setPreview] = useState<string>();
@@ -321,6 +328,25 @@ setState("success");
       {connectivity === "online"
         ? "Cloud AI services are available for image analysis."
         : "Local analysis is active. No cloud AI API is used."}
+    </span>
+  </div>
+</div>
+<div className="view-context-banner">
+  <span className="view-context-icon">
+    {viewMode === "Home & Community" ? "🏠" : "🌾"}
+  </span>
+
+  <div>
+    <strong>
+      {viewMode === "Home & Community"
+        ? appT.homeCommunity
+        : appT.smartAgriculture}
+    </strong>
+
+    <span>
+      {viewMode === "Home & Community"
+        ? appT.homeCommunityText
+        : appT.smartAgricultureText}
     </span>
   </div>
 </div>
