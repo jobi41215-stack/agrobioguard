@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getCurrentLocation } from "@/lib/analysis/location-service";
 import type { LocationContext } from "@/lib/analysis/risk-types";
@@ -76,6 +76,41 @@ export function LocationDashboard() {
       setObservations([]);
     }
   }
+useEffect(() => {
+  loadObservations();
+
+  window.addEventListener(
+    "agrobioguard-observation-saved",
+    loadObservations,
+  );
+
+  window.addEventListener(
+    "agrobioguard-observations-synced",
+    loadObservations,
+  );
+
+  window.addEventListener(
+    "storage",
+    loadObservations,
+  );
+
+  return () => {
+    window.removeEventListener(
+      "agrobioguard-observation-saved",
+      loadObservations,
+    );
+
+    window.removeEventListener(
+      "agrobioguard-observations-synced",
+      loadObservations,
+    );
+
+    window.removeEventListener(
+      "storage",
+      loadObservations,
+    );
+  };
+}, []);
 
   function refreshLocationData() {
     loadObservations();
