@@ -8,3 +8,364 @@
 .sync-panel-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .farm-demo-badge{display:inline-flex;align-items:center;gap:7px;margin-top:20px;padding:7px 10px;border-radius:10px;background:#edf5e9;color:#4f7e58;font-size:9px;font-weight:800;letter-spacing:.7px}.farm-demo-badge span{width:6px;height:6px;border-radius:50%;background:#4aa365}.agri-dashboard{border:1px solid #d9e5d9;border-radius:18px;background:#fff;overflow:hidden;box-shadow:0 18px 45px #21463014}.dashboard-header{display:flex;justify-content:space-between;align-items:center;padding:17px 19px;border-bottom:1px solid #e2e9e1}.dashboard-header div{display:flex;flex-direction:column;gap:4px}.dashboard-header small,.dashboard-card-header small{font-size:9px;font-weight:800;letter-spacing:1px;color:#75897e}.dashboard-header strong{font-size:15px;color:#315744}.dashboard-header>span{padding:5px 8px;border-radius:8px;background:#f3efe2;color:#9a7c3b;font-size:9px;font-weight:800}.dashboard-metrics{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #e2e9e1}.dashboard-metric{padding:15px}.dashboard-metric+.dashboard-metric{border-left:1px solid #e2e9e1}.dashboard-metric small{display:block;color:#74867d;font-size:8px;font-weight:800;letter-spacing:.7px}.dashboard-metric strong{display:block;margin-top:5px;font-size:21px;color:#315744}.dashboard-metric strong span{font-size:11px;color:#67956c}.dashboard-metric b{display:block;margin-top:4px;font-size:9px}.metric-good{color:#3b8a58}.metric-alert{color:#b06f37}.metric-pending{color:#9a7c3b}.dashboard-content{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;padding:14px}.dashboard-map-card,.dashboard-risk-card{border:1px solid #e0e8df;border-radius:13px;overflow:hidden}.dashboard-card-header{display:flex;justify-content:space-between;align-items:center;padding:12px 13px}.dashboard-card-header div{display:flex;flex-direction:column;gap:3px}.dashboard-card-header strong{font-size:12px;color:#315744}.dashboard-card-header>span{font-size:9px;color:#75887d}.map-status{padding:4px 7px;border-radius:7px;background:#edf3e9;color:#568060!important;font-weight:800}.dashboard-map{height:225px;position:relative;background:linear-gradient(145deg,#dcebd4 0 32%,#bad6bb 32% 35%,#e3e9c8 35% 61%,#bcdcc4 61%);overflow:hidden}.dashboard-map:before,.dashboard-map:after{content:"";position:absolute;border:2px solid #93b982;border-radius:46%;transform:rotate(-15deg)}.dashboard-map:before{left:12%;top:13%;width:43%;height:58%}.dashboard-map:after{right:4%;bottom:-16%;width:46%;height:57%}.dashboard-map-pin{position:absolute;font-size:19px;color:#d75e55;z-index:2}.pin-a{left:31%;top:27%}.pin-b{right:27%;top:47%;color:#c79535}.pin-c{right:18%;bottom:23%;color:#8b6ba5}.dashboard-field{position:absolute;z-index:2;padding:7px 9px;border-radius:8px;background:#ffffffdf;box-shadow:0 4px 12px #21463012}.dashboard-field b,.dashboard-field span{display:block}.dashboard-field b{font-size:9px;color:#3b6751}.dashboard-field span{margin-top:2px;font-size:8px;color:#6c7f74}.dashboard-field.north{left:9%;bottom:13%}.dashboard-field.river{right:7%;top:14%}.dashboard-field.wildlife{right:8%;bottom:10%}.risk-zone{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 13px;border-top:1px solid #e6ece5}.risk-zone>div{display:flex;flex-direction:column;gap:3px}.risk-zone b{font-size:11px;color:#315744}.risk-zone small{font-size:9px;color:#75877d}.risk-zone>strong{font-size:8px;letter-spacing:.7px}.zone-good{color:#388655}.zone-review{color:#ad7832}.zone-watch{color:#79639a}.dashboard-footer{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:14px 17px;border-top:1px solid #e2e9e1;background:#fafcf8}.dashboard-footer div{display:flex;flex-direction:column;gap:4px}.dashboard-footer b{font-size:11px;color:#315744}.dashboard-footer span{font-size:9px;color:#74857d}.dashboard-footer .button{margin:0;padding:9px 12px;font-size:11px;white-space:nowrap}@media(max-width:900px){.dashboard-metrics{grid-template-columns:repeat(2,1fr)}.dashboard-metric:nth-child(3){border-left:0;border-top:1px solid #e2e9e1}.dashboard-metric:nth-child(4){border-top:1px solid #e2e9e1}.dashboard-content{grid-template-columns:1fr}}@media(max-width:760px){.dashboard-footer{align-items:flex-start;flex-direction:column}.dashboard-footer .button{width:100%;justify-content:center}}
 
+/* =========================
+   CCTV DEMO
+========================= */
+
+.cctv-section {
+  padding: 4rem 0 2rem;
+}
+
+.cctv-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.cctv-camera-card,
+.cctv-control-card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.035);
+  padding: 1rem;
+}
+
+.cctv-camera-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0.5rem 1rem;
+}
+
+.cctv-camera-header div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.cctv-camera-header small {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  opacity: 0.6;
+}
+
+.cctv-camera-header strong {
+  font-size: 1rem;
+}
+
+.cctv-live {
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cctv-screen {
+  position: relative;
+  min-height: 430px;
+  overflow: hidden;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255,255,255,0.1), transparent 30%),
+    linear-gradient(135deg, #18251c, #0b120e 50%, #172019);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cctv-screen.detected {
+  border-color: rgba(255, 120, 80, 0.7);
+  box-shadow: 0 0 35px rgba(255, 100, 70, 0.18);
+}
+
+.cctv-grid-lines {
+  position: absolute;
+  inset: 0;
+  opacity: 0.16;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px);
+  background-size: 46px 46px;
+}
+
+.cctv-scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 40%;
+  height: 1px;
+  opacity: 0.45;
+  background: rgba(255,255,255,0.6);
+  animation: cctv-scan 3s linear infinite;
+}
+
+@keyframes cctv-scan {
+  0% {
+    transform: translateY(-140px);
+  }
+
+  50% {
+    transform: translateY(120px);
+  }
+
+  100% {
+    transform: translateY(-140px);
+  }
+}
+
+.cctv-camera-label,
+.cctv-time {
+  position: absolute;
+  top: 1rem;
+  z-index: 2;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.cctv-camera-label {
+  left: 1rem;
+}
+
+.cctv-time {
+  right: 1rem;
+}
+
+.cctv-monitoring,
+.cctv-detection-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.55rem;
+  text-align: center;
+}
+
+.cctv-monitoring span {
+  font-size: 3rem;
+  opacity: 0.7;
+}
+
+.cctv-monitoring strong {
+  letter-spacing: 0.1em;
+}
+
+.cctv-monitoring small {
+  opacity: 0.6;
+}
+
+.cctv-detection-overlay {
+  animation: cctv-alert-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes cctv-alert-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.65;
+  }
+}
+
+.detection-box {
+  width: 90px;
+  height: 90px;
+  display: grid;
+  place-items: center;
+  border: 2px dashed rgba(255,255,255,0.85);
+  border-radius: 16px;
+  font-size: 3rem;
+}
+
+.cctv-detection-overlay strong {
+  letter-spacing: 0.08em;
+  font-size: 0.9rem;
+}
+
+.cctv-detection-overlay small {
+  font-size: 1.05rem;
+}
+
+.cctv-detection-overlay b {
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  background: rgba(255, 80, 60, 0.2);
+  border: 1px solid rgba(255, 100, 80, 0.5);
+}
+
+.cctv-location-chip {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.38);
+  font-size: 0.68rem;
+}
+
+.cctv-camera-status {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  padding: 1rem 0.5rem 0.25rem;
+}
+
+.cctv-camera-status div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.cctv-camera-status span {
+  font-size: 0.62rem;
+  opacity: 0.55;
+  letter-spacing: 0.08em;
+}
+
+.cctv-camera-status strong {
+  font-size: 0.78rem;
+}
+
+.cctv-control-card {
+  display: grid;
+  gap: 1rem;
+}
+
+.cctv-demo-badge {
+  width: fit-content;
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.cctv-control-card h2 {
+  margin: 0;
+}
+
+.cctv-control-card > p {
+  margin: 0;
+  opacity: 0.7;
+  line-height: 1.65;
+}
+
+.cctv-control-actions {
+  display: flex;
+}
+
+.cctv-control-actions .button {
+  width: 100%;
+  justify-content: center;
+}
+
+.cctv-alert-card,
+.cctv-ready-card {
+  border-radius: 18px;
+  padding: 1rem;
+}
+
+.cctv-alert-card {
+  border: 1px solid rgba(255, 100, 80, 0.35);
+  background: rgba(255, 80, 60, 0.07);
+}
+
+.cctv-ready-card {
+  display: grid;
+  gap: 0.3rem;
+  text-align: center;
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+}
+
+.cctv-ready-card span {
+  font-size: 2rem;
+}
+
+.cctv-ready-card small {
+  opacity: 0.55;
+}
+
+.cctv-alert-card h3 {
+  margin: 0.8rem 0 0.4rem;
+}
+
+.cctv-alert-card p {
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+.cctv-alert-details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.cctv-alert-details span {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.7rem;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  font-size: 0.68rem;
+  opacity: 0.7;
+}
+
+.cctv-alert-details strong {
+  color: inherit;
+  opacity: 1;
+}
+
+.cctv-alert-signal {
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  font-size: 0.72rem;
+  opacity: 0.72;
+}
+
+.cctv-alert-signal span {
+  margin: 0 0.45rem;
+}
+
+.cctv-disclaimer {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.035);
+  font-size: 0.75rem;
+}
+
+.cctv-disclaimer strong {
+  font-weight: 700;
+}
+
+.cctv-disclaimer span {
+  opacity: 0.65;
+}
+
+@media (max-width: 900px) {
+  .cctv-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .cctv-screen {
+    min-height: 340px;
+  }
+
+  .cctv-camera-status,
+  .cctv-alert-details {
+    grid-template-columns: 1fr;
+  }
+}
