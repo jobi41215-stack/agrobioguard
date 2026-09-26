@@ -124,11 +124,12 @@ function markObservationsAsSynced() {
   return (
     <main>
       <nav className="nav wrap" aria-label="Main navigation">
-        <a className="brand" href="#top" aria-label="AgroBioGuard home"><span className="brand-mark">A</span><span>Agro<span>Bio</span>Guard</span></a>
+        <a className="brand" href="/" aria-label="AgroBioGuard home"><span className="brand-mark">A</span><span>Agro<span>Bio</span>Guard</span></a>
 <div className="nav-links">
-  <a href="#identify">{t.navIdentification}</a>
+  <a href="/">Home</a>
+  <a href="/community">Community</a>
+  <a href="/farm">Farming</a>
   <a href="#features">{t.navCapabilities}</a>
-  <a href="#farm">{t.navFarm}</a>
   <a href="#about">{t.navAbout}</a>
 </div>
                 <div className="nav-controls">
@@ -300,51 +301,37 @@ function markObservationsAsSynced() {
 
       <section className="section wrap modes" id="modes">
         <div className="section-heading"><p className="eyebrow"><i /> {t.chooseView}</p><h2>{t.twoWays}</h2></div>
-       <div className="mode-grid">
-  {[
-    [
-      "Home & Community",
-      t.homeCommunity,
-      t.homeCommunityText,
-      "⌂",
-      t.homeDiscovery,
-    ],
-    [
-      "Smart Agriculture",
-      t.smartAgriculture,
-      t.smartAgricultureText,
-      "⌘",
-      t.farmResilience,
-    ],
-  ].map(([value, name, text, icon, label]) => (
-    <button
-      key={value}
-      className={
-        mode === value ? "mode-card selected" : "mode-card"
-      }
-      onClick={() =>
-  setMode(
-    value as
-      | "Home & Community"
-      | "Smart Agriculture",
-  )
-}
-      aria-pressed={mode === value}
-    >
-      <span className="mode-icon">{icon}</span>
+        <div className="mode-grid">
+  <a
+    className="mode-card selected"
+    href="/community"
+  >
+    <span className="mode-icon">⌂</span>
 
-      <div>
-        <small>{label}</small>
-        <h3>{name}</h3>
-        <p>{text}</p>
-      </div>
+    <div>
+      <small>{t.homeDiscovery}</small>
+      <h3>{t.homeCommunity}</h3>
+      <p>{t.homeCommunityText}</p>
+    </div>
 
-      <span className="choice">
-        {mode === value ? "✓" : ""}
-      </span>
-    </button>
-  ))}
-</div>      </section>
+    <span className="choice">→</span>
+  </a>
+
+  <a
+    className="mode-card"
+    href="/farm"
+  >
+    <span className="mode-icon">⌘</span>
+
+    <div>
+      <small>{t.farmResilience}</small>
+      <h3>{t.smartAgriculture}</h3>
+      <p>{t.smartAgricultureText}</p>
+    </div>
+
+    <span className="choice">→</span>
+  </a>
+</div>     </section>
 
       <IdentificationWorkspace
   language={language}
@@ -567,7 +554,7 @@ function markObservationsAsSynced() {
   </div>
 </section>
 
-      <footer className="footer wrap" id="about"><a className="brand" href="#top"><span className="brand-mark">A</span><span>Agro<span>Bio</span>Guard</span></a><p>{t.footerTagline}</p><small>{t.footerPhase}</small></footer>
+      <footer className="footer wrap" id="about"><a className="brand" href="/"><span className="brand-mark">A</span><span>Agro<span>Bio</span>Guard</span></a><p>{t.footerTagline}</p><small>{t.footerPhase}</small></footer>
     </main>
   );
 }
