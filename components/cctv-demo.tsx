@@ -216,18 +216,31 @@ async function playAlertBeep() {
       observation,
       ...existing,
     ].slice(0, 10);
-
     localStorage.setItem(
-      "agrobioguard-observations",
-      JSON.stringify(updated),
-    );
+  "agrobioguard-observations",
+  JSON.stringify(updated),
+);
 
-    window.dispatchEvent(
-      new Event(
-        "agrobioguard-observation-saved",
-      ),
-    );
-  }
+const latestAlert = {
+  id: observation.id,
+  species: observation.species,
+  category: observation.category,
+  risk: observation.risk,
+  source: "local" as const,
+  savedAt: observation.savedAt,
+};
+
+localStorage.setItem(
+  "agrobioguard-latest-alert",
+  JSON.stringify(latestAlert),
+);
+
+window.dispatchEvent(
+  new Event(
+    "agrobioguard-observation-saved",
+  ),
+);
+      }
 
   async function simulateDetection() {
     const analysis: AnalysisResult = {
@@ -565,6 +578,12 @@ async function playAlertBeep() {
                   <span>•</span>
                   🔔 Browser notification requested
                 </div>
+<a
+  href="/farm"
+  className="button secondary cctv-farm-alert-button"
+>
+  View Farm Alert <span>→</span>
+</a>
               </div>
             ) : (
               <div className="cctv-ready-card">

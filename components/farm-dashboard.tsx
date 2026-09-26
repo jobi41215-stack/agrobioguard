@@ -9,6 +9,14 @@ import {
 type FarmDashboardProps = {
   language?: SupportedLanguage;
 };
+type SavedObservation = {
+  id: string;
+  species: string;
+  category: string;
+  risk: string;
+  source: "local";
+  savedAt: string;
+};
 
 export function FarmDashboard({
   language = "English",
@@ -16,33 +24,80 @@ export function FarmDashboard({
   const t = getTranslations(language);
 
   const [pendingObservations, setPendingObservations] =
-    useState(0);
+  useState(0);
+
+const [activeAlerts, setActiveAlerts] =
+  useState(0);
+
+const [latestWildlifeAlert, setLatestWildlifeAlert] =
+  useState<SavedObservation>();
 
   useEffect(() => {
     function updatePendingCount() {
-      const saved = localStorage.getItem(
-        "agrobioguard-observations",
-      );
+  const saved = localStorage.getItem(
+    "agrobioguard-observations",
+  );
 
-      if (!saved) {
-        setPendingObservations(0);
-        return;
+  let observations: SavedObservation[] = [];
+
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+
+      if (Array.isArray(parsed)) {
+        observations = parsed;
       }
-
-      try {
-        const observations = JSON.parse(saved);
-
-        setPendingObservations(
-          Array.isArray(observations)
-            ? observations.length
-            : 0,
-        );
-      } catch {
-        setPendingObservations(0);
-      }
+    } catch {
+      observations = [];
     }
+  }
 
-    updatePendingCount();
+  setPendingObservations(
+    observations.length,
+  );
+
+  const highRisk = observations.filter(
+    (observation) =>
+      observation.risk.toLowerCase() === "high",
+  );
+
+  const latestSavedAlert =
+    localStorage.getItem(
+      "agrobioguard-latest-alert",
+    );
+
+  let latestAlert: SavedObservation | undefined;
+
+  if (latestSavedAlert) {
+    try {
+      const parsed =
+        JSON.parse(latestSavedAlert);
+
+      if (
+        parsed &&
+        typeof parsed.species === "string"
+      ) {
+        latestAlert = parsed;
+      }
+    } catch {
+      latestAlert = undefined;
+    }
+  }
+
+  setLatestWildlifeAlert(
+    latestAlert,
+  );
+
+  const alertCount =
+    highRisk.length > 0
+      ? highRisk.length
+      : latestAlert?.risk.toLowerCase() ===
+          "high"
+        ? 1
+        : 0;
+
+  setActiveAlerts(alertCount);
+}
 
     window.addEventListener(
       "agrobioguard-observation-saved",
@@ -53,12 +108,20 @@ export function FarmDashboard({
       "agrobioguard-observations-synced",
       updatePendingCount,
     );
+window.addEventListener(
+  "storage",
+  updatePendingCount,
+);
 
     return () => {
       window.removeEventListener(
         "agrobioguard-observation-saved",
         updatePendingCount,
       );
+window.removeEventListener(
+  "storage",
+  updatePendingCount,
+);
 
       window.removeEventListener(
         "agrobioguard-observations-synced",
@@ -107,11 +170,15 @@ export function FarmDashboard({
           <div className="dashboard-metric">
             <small>{t.activeAlerts}</small>
 
-            <strong>02</strong>
+<strong>
+  {String(activeAlerts).padStart(2, "0")}
+</strong>
 
-            <b className="metric-alert">
-              Needs review
-            </b>
+<b className="metric-alert">
+  {activeAlerts > 0
+    ? "Needs review"
+    : "No active alert"}
+</b>
           </div>
 
           <div className="dashboard-metric">
@@ -175,9 +242,14 @@ export function FarmDashboard({
               </div>
 
               <div className="dashboard-field wildlife">
-                <b>Wildlife Zone</b>
-                <span>Monitor</span>
-              </div>
+  <b>Wildlife Zone</b>
+
+  <span>
+    {latestWildlifeAlert
+      ? `Alert: ${latestWildlifeAlert.species}`
+      : "Monitor"}
+  </span>
+</div>
             </div>
           </div>
 
@@ -219,23 +291,54 @@ export function FarmDashboard({
                 REVIEW
               </strong>
             </div>
+<div className="risk-zone">
+  <div>
+    <b>Wildlife Perimeter</b>
 
-            <div className="risk-zone">
-              <div>
-                <b>Wildlife Perimeter</b>
+    <small>
+      {latestWildlifeAlert
+        ? `${latestWildlifeAlert.species} detected`
+        : "Monitor nearby activity"}
+    </small>
+  </div>
 
-                <small>
-                  Monitor nearby activity
-                </small>
-              </div>
-
-              <strong className="zone-watch">
-                WATCH
-              </strong>
-            </div>
-          </div>
+  <strong
+    className={
+      latestWildlifeAlert
+        ? "zone-alert"
+        : "zone-watch"
+    }
+  >
+    {latestWildlifeAlert
+      ? "ALERT"
+      : "WATCH"}
+  </strong>
+</div>
+                      </div>
         </div>
+        {latestWildlifeAlert ? (
+  <div className="dashboard-live-alert">
+    <div>
+      <small>
+        LIVE WILDLIFE ALERT
+      </small>
 
+      <strong>
+        🚨 {latestWildlifeAlert.species}
+      </strong>
+
+      <span>
+        High-risk local observation detected.
+      </span>
+    </div>
+
+    <small>
+      {new Date(
+        latestWildlifeAlert.savedAt,
+      ).toLocaleString()}
+    </small>
+  </div>
+) : null}
         <div className="dashboard-footer">
           <div>
             <b>
