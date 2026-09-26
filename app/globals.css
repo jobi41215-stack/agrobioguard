@@ -686,3 +686,256 @@
     flex-direction: column;
   }
 }
+/* =========================
+   LOCATION INTELLIGENCE
+========================= */
+
+.location-dashboard-section {
+  padding: 5rem 0 2rem;
+}
+
+.location-main-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 1rem;
+}
+
+.location-main-card,
+.location-context-card,
+.location-observation-card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.035);
+  padding: 1.25rem;
+}
+
+.location-card-top,
+.location-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.location-card-top div,
+.location-section-header div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.location-card-top small,
+.location-section-header small,
+.location-context-card > small {
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  opacity: 0.55;
+}
+
+.location-card-top strong,
+.location-section-header strong {
+  font-size: 1rem;
+}
+
+.location-status {
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  background: rgba(255, 255, 255, 0.07);
+  opacity: 0.65;
+}
+
+.location-status.active {
+  background: rgba(90, 210, 130, 0.12);
+  opacity: 1;
+}
+
+.location-empty-state {
+  min-height: 280px;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0.55rem;
+  text-align: center;
+}
+
+.location-empty-state span,
+.location-no-observations span {
+  font-size: 2.5rem;
+  opacity: 0.7;
+}
+
+.location-empty-state strong {
+  font-size: 1rem;
+}
+
+.location-empty-state small {
+  max-width: 420px;
+  line-height: 1.6;
+  opacity: 0.55;
+  margin-bottom: 0.5rem;
+}
+
+.location-coordinate-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.location-coordinate-card div {
+  padding: 1rem;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.04);
+  display: grid;
+  gap: 0.35rem;
+}
+
+.location-coordinate-card small {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  opacity: 0.55;
+}
+
+.location-coordinate-card strong {
+  font-size: 1.1rem;
+}
+
+.location-page-message {
+  margin-top: 1rem;
+  padding: 0.8rem 0.9rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.75rem;
+  opacity: 0.72;
+}
+
+.location-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.location-context-card h2 {
+  margin: 0.65rem 0 1rem;
+}
+
+.location-step-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.location-step-list > div {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.location-step-list > div > span {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.location-step-list div div {
+  display: grid;
+  gap: 0.25rem;
+  padding-top: 0.1rem;
+}
+
+.location-step-list strong {
+  font-size: 0.8rem;
+}
+
+.location-step-list small {
+  font-size: 0.72rem;
+  line-height: 1.5;
+  opacity: 0.6;
+}
+
+.location-observation-card {
+  margin-top: 1rem;
+}
+
+.location-observation-list {
+  display: grid;
+  margin-top: 1rem;
+}
+
+.location-observation-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.location-observation-row div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.location-observation-row strong {
+  font-size: 0.82rem;
+}
+
+.location-observation-row small,
+.location-observation-row > span {
+  font-size: 0.68rem;
+  opacity: 0.55;
+}
+
+.location-no-observations {
+  min-height: 180px;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0.4rem;
+  text-align: center;
+}
+
+.location-no-observations strong {
+  font-size: 0.85rem;
+}
+
+.location-no-observations small {
+  opacity: 0.55;
+  font-size: 0.72rem;
+}
+
+.location-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.4rem;
+}
+
+@media (max-width: 800px) {
+  .location-main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 550px) {
+  .location-coordinate-card {
+    grid-template-columns: 1fr;
+  }
+
+  .location-card-top,
+  .location-section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .location-observation-row {
+    flex-direction: column;
+  }
+}
