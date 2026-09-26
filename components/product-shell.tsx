@@ -381,13 +381,22 @@ function markObservationsAsSynced() {
           text: t.featureCameraText,
         },
       ].map((feature, index) => {
-        const original = features[index];
+  const original = features[index];
 
-        return (
-  <a
-    className="feature-card"
-    key={feature.title}
-    href={index === 5 ? "#farm" : "#identify"}
+  const featureLinks = [
+    "/flora",
+    "/fauna",
+    "/pest-weed",
+    "/risk",
+    "/location",
+    "/cctv",
+  ];
+
+  return (
+    <a
+      className="feature-card"
+      key={feature.title}
+      href={featureLinks[index]}
     aria-label={`${feature.title} workspace`}
   >
     <span

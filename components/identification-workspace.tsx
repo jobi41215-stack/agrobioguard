@@ -44,11 +44,15 @@ type IdentificationWorkspaceProps = {
   language: string;
   connectivity: "online" | "offline";
   viewMode: "Home & Community" | "Smart Agriculture";
+  initialIdentificationMode?: IdentificationMode;
+  lockedIdentificationMode?: IdentificationMode;
 };
 export function IdentificationWorkspace({
   language,
   connectivity,
   viewMode,
+  initialIdentificationMode,
+  lockedIdentificationMode,
 }: IdentificationWorkspaceProps) {
   const t = getIdentificationTranslations(
     language as IdentificationLanguage,
@@ -57,7 +61,11 @@ const appT = getTranslations(
   language as SupportedLanguage,
 );
   const [identificationMode, setIdentificationMode] =
-    useState<IdentificationMode>("flora");
+  useState<IdentificationMode>(
+    lockedIdentificationMode ??
+      initialIdentificationMode ??
+      "flora",
+  );
   const [preview, setPreview] = useState<string>();
   const [fileName, setFileName] = useState("");
   const [image, setImage] = useState<File>();
@@ -489,32 +497,51 @@ setState("success");
   </div>
 
   <div className="mode-options">
-    <button
-      type="button"
-      className={
-        identificationMode === "flora"
-          ? "mode-option active"
-          : "mode-option"
-      }
-      onClick={() => setIdentificationMode("flora")}
-    >
-      🌿 {t.flora}
-    </button>
+    {lockedIdentificationMode === "flora" ? (
+      <div className="mode-option active">
+        🌿 {t.flora}
+      </div>
+    ) : null}
 
-    <button
-      type="button"
-      className={
-        identificationMode === "fauna"
-          ? "mode-option active"
-          : "mode-option"
-      }
-      onClick={() => setIdentificationMode("fauna")}
-    >
-      🐾 {t.fauna}
-    </button>
+    {lockedIdentificationMode === "fauna" ? (
+      <div className="mode-option active">
+        🐾 {t.fauna}
+      </div>
+    ) : null}
+
+    {!lockedIdentificationMode ? (
+      <>
+        <button
+          type="button"
+          className={
+            identificationMode === "flora"
+              ? "mode-option active"
+              : "mode-option"
+          }
+          onClick={() =>
+            setIdentificationMode("flora")
+          }
+        >
+          🌿 {t.flora}
+        </button>
+
+        <button
+          type="button"
+          className={
+            identificationMode === "fauna"
+              ? "mode-option active"
+              : "mode-option"
+          }
+          onClick={() =>
+            setIdentificationMode("fauna")
+          }
+        >
+          🐾 {t.fauna}
+        </button>
+      </>
+    ) : null}
   </div>
 </div>
-
 {!preview ? (
               <div className="dropzone">
                 <span
