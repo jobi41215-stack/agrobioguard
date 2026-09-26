@@ -100,20 +100,23 @@ const [latestWildlifeAlert, setLatestWildlifeAlert] =
 }
 
     window.addEventListener(
-      "agrobioguard-observation-saved",
-      updatePendingCount,
-    );
+  "agrobioguard-observation-saved",
+  updatePendingCount,
+);
 
-    window.addEventListener(
-      "agrobioguard-observations-synced",
-      updatePendingCount,
-    );
+window.addEventListener(
+  "agrobioguard-observations-synced",
+  updatePendingCount,
+);
+
 window.addEventListener(
   "storage",
   updatePendingCount,
 );
 
-    return () => {
+updatePendingCount();
+
+return () => {
       window.removeEventListener(
         "agrobioguard-observation-saved",
         updatePendingCount,
