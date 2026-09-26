@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/components/language-provider";
 import { features, languages } from "@/lib/content";
 import {
   getTranslations,
@@ -36,8 +37,9 @@ const [showSyncPanel, setShowSyncPanel] =
 
 const [observationList, setObservationList] =
   useState<PendingObservation[]>([]);
-  const [language, setLanguage] =
-  useState<SupportedLanguage>("English");
+  const { language, setLanguage } =
+  useLanguage();
+
 const t = getTranslations(language);
 useEffect(() => {
   function updatePendingCount() {
@@ -124,11 +126,19 @@ function markObservationsAsSynced() {
       <nav className="nav wrap" aria-label="Main navigation">
         <a className="brand" href="/" aria-label="AgroBioGuard home"><span className="brand-mark">A</span><span>Agro<span>Bio</span>Guard</span></a>
 <div className="nav-links">
-  <a href="/">Home</a>
-  <a href="/community">Community</a>
-  <a href="/farm">Farming</a>
-  <a href="#features">{t.navCapabilities}</a>
-  <a href="#about">{t.navAbout}</a>
+  <a href="/">{t.navHome}</a>
+<a href="/community">
+  {t.navCommunity}
+</a>
+<a href="/farm">
+  {t.navFarming}
+</a>
+<a href="#features">
+  {t.navCapabilities}
+</a>
+<a href="#about">
+  {t.navAbout}
+</a>
 </div>
                 <div className="nav-controls">
           <label className="language"><span className="sr-only">Language</span><select

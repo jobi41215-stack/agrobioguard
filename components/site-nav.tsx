@@ -1,15 +1,45 @@
+"use client";
+
 import Link from "next/link";
+import {
+  getTranslations,
+} from "@/lib/translations";
+import { useLanguage } from "@/components/language-provider";
+import type { SupportedLanguage } from "@/lib/translations";
+
+const languageKeys: SupportedLanguage[] = [
+  "English",
+  "Tamil",
+  "Telugu",
+  "Hindi",
+  "Kannada",
+  "Malayalam",
+];
+
+const languageLabels = [
+  "English",
+  "தமிழ்",
+  "తెలుగు",
+  "हिन्दी",
+  "ಕನ್ನಡ",
+  "മലയാളം",
+];
 
 export function SiteNav() {
+  const { language, setLanguage } =
+    useLanguage();
+
+  const t = getTranslations(language);
+
   return (
     <nav
       className="nav wrap"
-      aria-label="Main navigation"
+      aria-label={t.mainNavigation}
     >
       <Link
         className="brand"
         href="/"
-        aria-label="AgroBioGuard home"
+        aria-label={t.navHome}
       >
         <span className="brand-mark">
           A
@@ -21,31 +51,74 @@ export function SiteNav() {
       </Link>
 
       <div className="nav-links">
-        <Link href="/">Home</Link>
+        <Link href="/">
+          {t.navHome}
+        </Link>
+
         <Link href="/community">
-          Community
+          {t.navCommunity}
         </Link>
+
         <Link href="/farm">
-          Farming
+          {t.navFarming}
         </Link>
+
         <Link href="/flora">
-          Flora
+          {t.navFlora}
         </Link>
+
         <Link href="/fauna">
-          Fauna
+          {t.navFauna}
         </Link>
+
         <Link href="/pest-weed">
-          Pest &amp; Weed
+          {t.navPestWeed}
         </Link>
+
         <Link href="/risk">
-          Risk
+          {t.navRisk}
         </Link>
+
         <Link href="/location">
-          Location
+          {t.navLocation}
         </Link>
+
         <Link href="/cctv">
-          CCTV
+          {t.navCctv}
         </Link>
+      </div>
+
+      <div className="nav-controls">
+        <label className="language">
+          <span className="sr-only">
+            {t.language}
+          </span>
+
+          <select
+            value={language}
+            onChange={(event) =>
+              setLanguage(
+                event.target.value as SupportedLanguage,
+              )
+            }
+          >
+            {languageLabels.map(
+              (label, index) => {
+                const value =
+                  languageKeys[index];
+
+                return (
+                  <option
+                    key={value}
+                    value={value}
+                  >
+                    {label}
+                  </option>
+                );
+              },
+            )}
+          </select>
+        </label>
       </div>
     </nav>
   );

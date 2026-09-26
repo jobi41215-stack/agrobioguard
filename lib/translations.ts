@@ -12,6 +12,29 @@ export const translations = {
     navCapabilities: "Capabilities",
     navFarm: "Farm view",
     navAbout: "About",
+navHome: "Home",
+navCommunity: "Community",
+navFarming: "Farming",
+navFlora: "Flora",
+navFauna: "Fauna",
+navPestWeed: "Pest & Weed",
+navRisk: "Risk",
+navLocation: "Location",
+navCctv: "CCTV",
+mainNavigation: "Main navigation",
+language: "Language",
+
+floraPageEyebrow: "FLORA IDENTIFICATION",
+floraPageTitle: "Identify Plants Around You",
+floraPageDescription:
+  "Upload a plant image and AgroBioGuard will identify the flora, provide location context, and assess associated ecological risk.",
+
+faunaPageEyebrow: "FAUNA IDENTIFICATION",
+faunaPageTitle: "Identify Wildlife Safely",
+faunaPageDescription:
+  "Upload a wildlife image and AgroBioGuard can identify the animal, use location context, and generate a safety-oriented risk assessment.",
+
+backToCommunity: "Back to Community",
 
     heroEyebrow: "BUILT FOR FARMS & NATURE",
     heroTitle: "See what matters.",
@@ -137,7 +160,29 @@ today: "Today",
     navCapabilities: "திறன்கள்",
     navFarm: "பண்ணை பார்வை",
     navAbout: "பற்றி",
+navHome: "முகப்பு",
+navCommunity: "சமூகம்",
+navFarming: "வேளாண்மை",
+navFlora: "தாவரங்கள்",
+navFauna: "விலங்குகள்",
+navPestWeed: "பூச்சி மற்றும் களை",
+navRisk: "அபாயம்",
+navLocation: "இருப்பிடம்",
+navCctv: "CCTV",
+mainNavigation: "முதன்மை வழிசெலுத்தல்",
+language: "மொழி",
 
+floraPageEyebrow: "தாவர அடையாளம் காணல்",
+floraPageTitle: "உங்களைச் சுற்றியுள்ள தாவரங்களை அடையாளம் காணுங்கள்",
+floraPageDescription:
+  "ஒரு தாவரப் படத்தைப் பதிவேற்றவும். AgroBioGuard தாவரத்தை அடையாளம் கண்டு, இருப்பிடச் சூழலை வழங்கி, தொடர்புடைய சூழலியல் அபாயத்தை மதிப்பிடும்.",
+
+faunaPageEyebrow: "விலங்கு அடையாளம் காணல்",
+faunaPageTitle: "வனவிலங்குகளை பாதுகாப்பாக அடையாளம் காணுங்கள்",
+faunaPageDescription:
+  "வனவிலங்கு படத்தைப் பதிவேற்றவும். AgroBioGuard விலங்கை அடையாளம் கண்டு, இருப்பிடச் சூழலைப் பயன்படுத்தி, பாதுகாப்பை மையமாகக் கொண்ட அபாய மதிப்பீட்டை உருவாக்கும்.",
+
+backToCommunity: "சமூகப் பகுதிக்குத் திரும்பு",
     heroEyebrow: "பண்ணைகள் மற்றும் இயற்கைக்காக உருவாக்கப்பட்டது",
     heroTitle: "முக்கியமானதை காணுங்கள்.",
     heroTitleAccent: "வளர்வதை பாதுகாப்போம்.",
@@ -262,6 +307,29 @@ today: "இன்று",
     navCapabilities: "సామర్థ్యాలు",
     navFarm: "వ్యవసాయ దృశ్యం",
     navAbout: "గురించి",
+navHome: "హోమ్",
+navCommunity: "సమాజం",
+navFarming: "వ్యవసాయం",
+navFlora: "వృక్షజాలం",
+navFauna: "జంతుజాలం",
+navPestWeed: "కీటకాలు మరియు కలుపు",
+navRisk: "ప్రమాదం",
+navLocation: "స్థానం",
+navCctv: "CCTV",
+mainNavigation: "ప్రధాన నావిగేషన్",
+language: "భాష",
+
+floraPageEyebrow: "వృక్షజాల గుర్తింపు",
+floraPageTitle: "మీ చుట్టూ ఉన్న మొక్కలను గుర్తించండి",
+floraPageDescription:
+  "మొక్క చిత్రాన్ని అప్‌లోడ్ చేయండి. AgroBioGuard వృక్షజాలాన్ని గుర్తించి, స్థాన సందర్భాన్ని అందించి, సంబంధిత పర్యావరణ ప్రమాదాన్ని అంచనా వేస్తుంది.",
+
+faunaPageEyebrow: "జంతుజాల గుర్తింపు",
+faunaPageTitle: "వన్యప్రాణులను సురక్షితంగా గుర్తించండి",
+faunaPageDescription:
+  "వన్యప్రాణి చిత్రాన్ని అప్‌లోడ్ చేయండి. AgroBioGuard జంతువును గుర్తించి, స్థాన సందర్భాన్ని ఉపయోగించి, భద్రతా దృష్టితో ప్రమాద అంచనాను రూపొందిస్తుంది.",
+
+backToCommunity: "సమాజానికి తిరిగి వెళ్లండి",
 
     heroEyebrow: "వ్యవసాయ క్షేత్రాలు మరియు ప్రకృతి కోసం",
     heroTitle: "ముఖ్యమైనదాన్ని చూడండి.",
@@ -378,6 +446,29 @@ today: "ఈ రోజు",
     navCapabilities: "क्षमताएँ",
     navFarm: "फार्म दृश्य",
     navAbout: "हमारे बारे में",
+navHome: "होम",
+navCommunity: "समुदाय",
+navFarming: "कृषि",
+navFlora: "वनस्पति",
+navFauna: "जीव-जंतु",
+navPestWeed: "कीट और खरपतवार",
+navRisk: "जोखिम",
+navLocation: "स्थान",
+navCctv: "CCTV",
+mainNavigation: "मुख्य नेविगेशन",
+language: "भाषा",
+
+floraPageEyebrow: "वनस्पति पहचान",
+floraPageTitle: "अपने आसपास के पौधों की पहचान करें",
+floraPageDescription:
+  "पौधे की तस्वीर अपलोड करें। AgroBioGuard वनस्पति की पहचान करेगा, स्थान संदर्भ देगा और संबंधित पारिस्थितिक जोखिम का आकलन करेगा।",
+
+faunaPageEyebrow: "जीव-जंतु पहचान",
+faunaPageTitle: "वन्यजीवों की सुरक्षित पहचान करें",
+faunaPageDescription:
+  "वन्यजीव की तस्वीर अपलोड करें। AgroBioGuard जानवर की पहचान करेगा, स्थान संदर्भ का उपयोग करेगा और सुरक्षा-केंद्रित जोखिम आकलन तैयार करेगा।",
+
+backToCommunity: "समुदाय पर वापस जाएँ",
 
     heroEyebrow: "खेतों और प्रकृति के लिए बनाया गया",
     heroTitle: "जो महत्वपूर्ण है उसे देखें।",
@@ -494,6 +585,29 @@ today: "आज",
     navCapabilities: "ಸಾಮರ್ಥ್ಯಗಳು",
     navFarm: "ಕೃಷಿ ವೀಕ್ಷಣೆ",
     navAbout: "ಕುರಿತು",
+navHome: "ಮುಖಪುಟ",
+navCommunity: "ಸಮುದಾಯ",
+navFarming: "ಕೃಷಿ",
+navFlora: "ಸಸ್ಯಜಾಲ",
+navFauna: "ಪ್ರಾಣಿಜಾಲ",
+navPestWeed: "ಕೀಟ ಮತ್ತು ಕಳೆ",
+navRisk: "ಅಪಾಯ",
+navLocation: "ಸ್ಥಳ",
+navCctv: "CCTV",
+mainNavigation: "ಮುಖ್ಯ ನ್ಯಾವಿಗೇಶನ್",
+language: "ಭಾಷೆ",
+
+floraPageEyebrow: "ಸಸ್ಯಜಾಲ ಗುರುತಿಸುವಿಕೆ",
+floraPageTitle: "ನಿಮ್ಮ ಸುತ್ತಲಿನ ಸಸ್ಯಗಳನ್ನು ಗುರುತಿಸಿ",
+floraPageDescription:
+  "ಸಸ್ಯದ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ. AgroBioGuard ಸಸ್ಯಜಾಲವನ್ನು ಗುರುತಿಸಿ, ಸ್ಥಳದ ಸಂದರ್ಭವನ್ನು ನೀಡಿ ಮತ್ತು ಸಂಬಂಧಿತ ಪರಿಸರ ಅಪಾಯವನ್ನು ಮೌಲ್ಯಮಾಪನ ಮಾಡುತ್ತದೆ.",
+
+faunaPageEyebrow: "ಪ್ರಾಣಿಜಾಲ ಗುರುತಿಸುವಿಕೆ",
+faunaPageTitle: "ವನ್ಯಜೀವಿಗಳನ್ನು ಸುರಕ್ಷಿತವಾಗಿ ಗುರುತಿಸಿ",
+faunaPageDescription:
+  "ವನ್ಯಜೀವಿಯ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ. AgroBioGuard ಪ್ರಾಣಿಯನ್ನು ಗುರುತಿಸಿ, ಸ್ಥಳದ ಸಂದರ್ಭವನ್ನು ಬಳಸಿಕೊಂಡು ಸುರಕ್ಷತಾ ಆಧಾರಿತ ಅಪಾಯ ಮೌಲ್ಯಮಾಪನವನ್ನು ನೀಡುತ್ತದೆ.",
+
+backToCommunity: "ಸಮುದಾಯಕ್ಕೆ ಹಿಂತಿರುಗಿ",
 
     heroEyebrow: "ಕೃಷಿ ಕ್ಷೇತ್ರಗಳು ಮತ್ತು ಪ್ರಕೃತಿಗಾಗಿ ನಿರ್ಮಿಸಲಾಗಿದೆ",
     heroTitle: "ಮುಖ್ಯವಾದುದನ್ನು ನೋಡಿ.",
@@ -610,6 +724,29 @@ today: "ಇಂದು",
     navCapabilities: "കഴിവുകൾ",
     navFarm: "ഫാം കാഴ്ച",
     navAbout: "കുറിച്ച്",
+navHome: "ഹോം",
+navCommunity: "സമൂഹം",
+navFarming: "കൃഷി",
+navFlora: "സസ്യജാലം",
+navFauna: "ജീവജാലം",
+navPestWeed: "കീടവും കളയും",
+navRisk: "അപകടം",
+navLocation: "ലൊക്കേഷൻ",
+navCctv: "CCTV",
+mainNavigation: "പ്രധാന നാവിഗേഷൻ",
+language: "ഭാഷ",
+
+floraPageEyebrow: "സസ്യജാല തിരിച്ചറിയൽ",
+floraPageTitle: "നിങ്ങളുടെ ചുറ്റുമുള്ള സസ്യങ്ങളെ തിരിച്ചറിയുക",
+floraPageDescription:
+  "ഒരു സസ്യത്തിന്റെ ചിത്രം അപ്‌ലോഡ് ചെയ്യുക. AgroBioGuard സസ്യജാലത്തെ തിരിച്ചറിയുകയും ലൊക്കേഷൻ സാഹചര്യം നൽകുകയും ബന്ധപ്പെട്ട പരിസ്ഥിതി അപകടസാധ്യത വിലയിരുത്തുകയും ചെയ്യും.",
+
+faunaPageEyebrow: "ജീവജാല തിരിച്ചറിയൽ",
+faunaPageTitle: "വന്യജീവികളെ സുരക്ഷിതമായി തിരിച്ചറിയുക",
+faunaPageDescription:
+  "ഒരു വന്യജീവിയുടെ ചിത്രം അപ്‌ലോഡ് ചെയ്യുക. AgroBioGuard ജീവിയെ തിരിച്ചറിയുകയും ലൊക്കേഷൻ സാഹചര്യം ഉപയോഗിക്കുകയും സുരക്ഷയെ കേന്ദ്രീകരിച്ച അപകട വിലയിരുത്തൽ നൽകുകയും ചെയ്യും.",
+
+backToCommunity: "സമൂഹത്തിലേക്ക് മടങ്ങുക",
 
     heroEyebrow: "കൃഷിയിടങ്ങൾക്കും പ്രകൃതിക്കും വേണ്ടി നിർമ്മിച്ചത്",
     heroTitle: "പ്രധാനപ്പെട്ടത് കാണുക.",

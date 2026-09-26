@@ -1,10 +1,11 @@
 "use client";
-
 import { useState } from "react";
 import {
   getTranslations,
   type SupportedLanguage,
 } from "@/lib/translations";
+import { useLanguage } from "@/components/language-provider";
+
 import {
   IdentificationWorkspace,
 } from "@/components/identification-workspace";
@@ -27,34 +28,35 @@ export function IdentificationPageShell({
   backHref,
   backLabel,
 }: IdentificationPageShellProps) {
-  const [language, setLanguage] =
-    useState<SupportedLanguage>("English");
+  
+const { language, setLanguage } =
+  useLanguage();
 
+const t = getTranslations(language);
+const languageKeys: SupportedLanguage[] = [
+  "English",
+  "Tamil",
+  "Telugu",
+  "Hindi",
+  "Kannada",
+  "Malayalam",
+];
+
+const languageLabels = [
+  "English",
+  "தமிழ்",
+  "తెలుగు",
+  "हिन्दी",
+  "ಕನ್ನಡ",
+  "മലയാളം",
+];
   const [connectivity, setConnectivity] =
     useState<"online" | "offline">(
       "online",
     );
 
-  const t = getTranslations(language);
-
-  const languageKeys: SupportedLanguage[] = [
-    "English",
-    "Tamil",
-    "Telugu",
-    "Hindi",
-    "Kannada",
-    "Malayalam",
-  ];
-
-  const languageLabels = [
-    "English",
-    "தமிழ்",
-    "తెలుగు",
-    "हिन्दी",
-    "ಕನ್ನಡ",
-    "മലയാളം",
-  ];
-
+  
+  
   return (
     <main>
       <nav
@@ -76,23 +78,36 @@ export function IdentificationPageShell({
         </a>
 
         <div className="nav-links">
-          <a href="/">Home</a>
-          <a href="/community">
-            Community
-          </a>
-          <a href="/farm">Farming</a>
-          <a href="/risk">Risk</a>
-          <a href="/location">
-            Location
-          </a>
-          <a href="/cctv">CCTV</a>
+          <a href="/">
+  {t.navHome}
+</a>
+
+<a href="/community">
+  {t.navCommunity}
+</a>
+
+<a href="/farm">
+  {t.navFarming}
+</a>
+
+<a href="/risk">
+  {t.navRisk}
+</a>
+
+<a href="/location">
+  {t.navLocation}
+</a>
+
+<a href="/cctv">
+  {t.navCctv}
+</a>
         </div>
 
         <div className="nav-controls">
           <label className="language">
             <span className="sr-only">
-              Language
-            </span>
+  {t.language}
+</span>
 
             <select
               value={language}
@@ -126,12 +141,23 @@ export function IdentificationPageShell({
       >
         <div className="section-heading">
           <p className="eyebrow">
-            <i /> {eyebrow}
+            <i />
+{mode === "flora"
+  ? t.floraPageEyebrow
+  : t.faunaPageEyebrow}
           </p>
 
-          <h1>{title}</h1>
+          <h1>
+  {mode === "flora"
+    ? t.floraPageTitle
+    : t.faunaPageTitle}
+</h1>
 
-          <p>{description}</p>
+          <p>
+  {mode === "flora"
+    ? t.floraPageDescription
+    : t.faunaPageDescription}
+</p>
         </div>
 
         <div className="feature-connectivity-bar">
@@ -194,7 +220,7 @@ export function IdentificationPageShell({
           className="button outline"
           href={backHref}
         >
-          ← {backLabel}
+          ← {t.backToCommunity}
         </a>
       </section>
     </main>
