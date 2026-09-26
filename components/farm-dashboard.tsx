@@ -56,15 +56,10 @@ const [latestWildlifeAlert, setLatestWildlifeAlert] =
     observations.length,
   );
 
-  const highRisk = observations.filter(
-    (observation) =>
-      observation.risk.toLowerCase() === "high",
-  );
-
   const latestSavedAlert =
-    localStorage.getItem(
-      "agrobioguard-latest-alert",
-    );
+  localStorage.getItem(
+    "agrobioguard-latest-alert",
+  );
 
   let latestAlert: SavedObservation | undefined;
 
@@ -89,14 +84,12 @@ const [latestWildlifeAlert, setLatestWildlifeAlert] =
   );
 
   const alertCount =
-    highRisk.length > 0
-      ? highRisk.length
-      : latestAlert?.risk.toLowerCase() ===
-          "high"
-        ? 1
-        : 0;
+  latestAlert?.risk.toLowerCase() ===
+  "high"
+    ? 1
+    : 0;
 
-  setActiveAlerts(alertCount);
+setActiveAlerts(alertCount);
 }
 
     window.addEventListener(
