@@ -9,6 +9,14 @@ import {
 import { IdentificationWorkspace } from "@/components/identification-workspace";
 
 const statuses = ["ONLINE AI", "OFFLINE AI", "SYNC PENDING"];
+type PendingObservation = {
+  id: string;
+  species: string;
+  category: string;
+  risk: string;
+  source: "local";
+  savedAt: string;
+};
 const languageKeys: SupportedLanguage[] = [
   "English",
   "Tamil",
@@ -25,9 +33,93 @@ export function ProductShell() {
   const [status, setStatus] = useState("ONLINE AI");
 const [pendingObservations, setPendingObservations] =
   useState(0);
+const [showSyncPanel, setShowSyncPanel] =
+  useState(false);
+
+const [observationList, setObservationList] =
+  useState<PendingObservation[]>([]);
   const [language, setLanguage] =
   useState<SupportedLanguage>("English");
 const t = getTranslations(language);
+useEffect(() => {
+  function updatePendingCount() {
+    const saved = localStorage.getItem(
+      "agrobioguard-observations",
+    );
+
+    if (!saved) {
+      setPendingObservations(0);
+      return;
+    }
+
+    try {
+      const observations = JSON.parse(saved);
+
+      setPendingObservations(
+        Array.isArray(observations)
+          ? observations.length
+          : 0,
+      );
+    } catch {
+      setPendingObservations(0);
+    }
+  }
+
+  updatePendingCount();
+
+  window.addEventListener(
+    "agrobioguard-observation-saved",
+    updatePendingCount,
+  );
+
+  return () => {
+    window.removeEventListener(
+      "agrobioguard-observation-saved",
+      updatePendingCount,
+    );
+  };
+}, []);
+
+function openSyncPanel() {
+  const saved = localStorage.getItem(
+    "agrobioguard-observations",
+  );
+
+  if (!saved) {
+    setObservationList([]);
+    setShowSyncPanel(true);
+    return;
+  }
+
+  try {
+    const observations = JSON.parse(saved);
+
+    setObservationList(
+      Array.isArray(observations)
+        ? observations
+        : [],
+    );
+  } catch {
+    setObservationList([]);
+  }
+
+  setShowSyncPanel(true);
+}
+function markObservationsAsSynced() {
+  localStorage.removeItem(
+    "agrobioguard-observations",
+  );
+
+  setObservationList([]);
+  setPendingObservations(0);
+
+  window.dispatchEvent(
+    new Event("agrobioguard-observations-synced"),
+  );
+
+  setShowSyncPanel(false);
+}
+
 
   return (
     <main>
@@ -98,7 +190,10 @@ const t = getTranslations(language);
   </button>
 
   <button
-    onClick={() => setStatus("SYNC PENDING")}
+    onClick={() => {
+  setStatus("SYNC PENDING");
+  openSyncPanel();
+}}
     className={status === "SYNC PENDING" ? "status active" : "status"}
   >
     <i />
@@ -117,6 +212,91 @@ const t = getTranslations(language);
       : t.syncDemo}
 </span>
               </div></section>
+{showSyncPanel ? (
+  <section className="sync-panel wrap">
+    <div className="sync-panel-header">
+      <div>
+        <span className="eyebrow">
+          <i /> OFFLINE STORAGE
+        </span>
+
+        <h3>Pending Observations</h3>
+
+        <p>
+          These observations are stored locally and
+          are waiting for synchronization.
+        </p>
+      </div>
+
+      <div className="sync-panel-actions">
+  <div className="sync-panel-actions">
+  <button
+    type="button"
+    className="button outline"
+    onClick={() => setShowSyncPanel(false)}
+  >
+    Close
+  </button>
+
+  {observationList.length > 0 ? (
+    <button
+      type="button"
+      className="button primary"
+      onClick={markObservationsAsSynced}
+    >
+      Mark as Synced
+    </button>
+  ) : null}
+</div>
+
+  {observationList.length > 0 ? (
+    <button
+      type="button"
+      className="button primary"
+      onClick={markObservationsAsSynced}
+    >
+      Mark as Synced
+    </button>
+  ) : null}
+</div>
+    </div>
+
+    {observationList.length === 0 ? (
+      <div className="sync-empty">
+        <span>✓</span>
+        <strong>No observations pending</strong>
+        <small>
+          Your local observation queue is empty.
+        </small>
+      </div>
+    ) : (
+      <div className="sync-observation-list">
+        {observationList.map((observation) => (
+          <div
+            className="sync-observation"
+            key={observation.id}
+          >
+            <div>
+              <strong>{observation.species}</strong>
+              <span>
+                {observation.category} · Risk{" "}
+                {observation.risk.toUpperCase()}
+              </span>
+            </div>
+
+            <small>
+              {new Date(
+                observation.savedAt,
+              ).toLocaleString()}
+            </small>
+
+            <b>AWAITING SYNC</b>
+          </div>
+        ))}
+      </div>
+    )}
+  </section>
+) : null}
 
       <section className="section wrap modes" id="modes">
         <div className="section-heading"><p className="eyebrow"><i /> {t.chooseView}</p><h2>{t.twoWays}</h2></div>
@@ -242,15 +422,150 @@ const t = getTranslations(language);
     </div>
   </div>
 </section>
-      <section className="farm-section wrap" id="farm"><div className="farm-copy"><p className="eyebrow">
-  <i /> {t.smartAgricultureEyebrow}
-</p>
+      <section className="farm-section wrap" id="farm">
+  <div className="farm-copy">
+    <p className="eyebrow">
+      <i /> {t.smartAgricultureEyebrow}
+    </p>
 
-<h2>{t.farmTitle}</h2>
+    <h2>{t.farmTitle}</h2>
 
-<p>{t.farmText}</p><a className="button secondary" href="#top">{t.previewFarm} <span>↗</span></a></div>
-        <div className="farm-preview" aria-label="Demo farm monitoring dashboard"><div className="preview-head"><span>{t.farmOverview}</span><small>{t.demoData}</small></div><div className="map-demo"><span className="map-pin pin-one">●</span><span className="map-pin pin-two">●</span><span className="field-label">{t.northField}<br /><b>{t.healthy}</b></span><span className="field-label second">{t.riverPlot}<br /><b>{t.review}</b></span></div><div className="metrics"><div><small>{t.fieldHealth}</small><strong>86<span>%</span></strong></div><div><small>{t.activeAlerts}</small><strong>02</strong></div><div><small>{t.lastScan}</small><strong>{t.today}</strong></div></div></div>
-      </section>
+    <p>{t.farmText}</p>
+
+    <div className="farm-demo-badge">
+      <span /> SMART AGRICULTURE DEMO
+    </div>
+  </div>
+
+  <div className="agri-dashboard">
+    <div className="dashboard-header">
+      <div>
+        <small>SMART AGRICULTURE</small>
+        <strong>{t.farmOverview}</strong>
+      </div>
+
+      <span>{t.demoData}</span>
+    </div>
+
+    <div className="dashboard-metrics">
+      <div className="dashboard-metric">
+        <small>{t.fieldHealth}</small>
+        <strong>
+          86<span>%</span>
+        </strong>
+        <b className="metric-good">Healthy</b>
+      </div>
+
+      <div className="dashboard-metric">
+        <small>{t.activeAlerts}</small>
+        <strong>02</strong>
+        <b className="metric-alert">Needs review</b>
+      </div>
+
+      <div className="dashboard-metric">
+        <small>{t.lastScan}</small>
+        <strong>{t.today}</strong>
+        <b className="metric-good">Updated</b>
+      </div>
+
+      <div className="dashboard-metric">
+        <small>Pending Sync</small>
+        <strong>{pendingObservations}</strong>
+        <b className="metric-pending">Offline queue</b>
+      </div>
+    </div>
+
+    <div className="dashboard-content">
+      <div className="dashboard-map-card">
+        <div className="dashboard-card-header">
+          <div>
+            <small>FIELD MONITORING</small>
+            <strong>Farm Risk Map</strong>
+          </div>
+
+          <span className="map-status">
+            DEMO MAP
+          </span>
+        </div>
+
+        <div className="dashboard-map">
+          <span className="dashboard-map-pin pin-a">●</span>
+          <span className="dashboard-map-pin pin-b">●</span>
+          <span className="dashboard-map-pin pin-c">●</span>
+
+          <div className="dashboard-field north">
+            <b>{t.northField}</b>
+            <span>Healthy</span>
+          </div>
+
+          <div className="dashboard-field river">
+            <b>{t.riverPlot}</b>
+            <span>Review required</span>
+          </div>
+
+          <div className="dashboard-field wildlife">
+            <b>Wildlife Zone</b>
+            <span>Monitor</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="dashboard-risk-card">
+        <div className="dashboard-card-header">
+          <div>
+            <small>RISK MONITORING</small>
+            <strong>Current Zones</strong>
+          </div>
+
+          <span>3 zones</span>
+        </div>
+
+        <div className="risk-zone">
+          <div>
+            <b>{t.northField}</b>
+            <small>Crop condition stable</small>
+          </div>
+          <strong className="zone-good">
+            HEALTHY
+          </strong>
+        </div>
+
+        <div className="risk-zone">
+          <div>
+            <b>{t.riverPlot}</b>
+            <small>Requires field inspection</small>
+          </div>
+          <strong className="zone-review">
+            REVIEW
+          </strong>
+        </div>
+
+        <div className="risk-zone">
+          <div>
+            <b>Wildlife Perimeter</b>
+            <small>Monitor nearby activity</small>
+          </div>
+          <strong className="zone-watch">
+            WATCH
+          </strong>
+        </div>
+      </div>
+    </div>
+
+    <div className="dashboard-footer">
+      <div>
+        <b>AgroBioGuard monitoring status</b>
+        <span>
+          Demo dashboard uses local and sample monitoring data.
+        </span>
+      </div>
+
+      <a href="#identify" className="button secondary">
+        Review Analysis <span>→</span>
+      </a>
+    </div>
+  </div>
+</section>
 
       <footer className="footer wrap" id="about"><a className="brand" href="#top"><span className="brand-mark">A</span><span>Agro<span>Bio</span>Guard</span></a><p>{t.footerTagline}</p><small>{t.footerPhase}</small></footer>
     </main>

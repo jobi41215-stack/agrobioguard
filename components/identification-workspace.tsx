@@ -74,6 +74,7 @@ const [agroAlert, setAgroAlert] =
 const [analyzedLanguage, setAnalyzedLanguage] =
   useState<string>();
 
+
   const [state, setState] = useState<AnalysisState>("empty");
 const [savedObservations, setSavedObservations] =
   useState<SavedObservation[]>([]);
@@ -83,7 +84,80 @@ const [savedObservations, setSavedObservations] =
   const [locationState, setLocationState] =
     useState<LocationState>("unavailable");
   const [locationError, setLocationError] = useState("");
+  useEffect(() => {
+  if (
+    !image ||
+    !result ||
+    result.analysisSource !== "local" ||
+    analyzedLanguage === language
+  ) {
+    return;
+  }
 
+  let cancelled = false;
+
+  async function relocalizeOfflineResult() {
+    try {
+      const selectedImage = image;
+
+if (!selectedImage) {
+  return;
+}
+
+const localizedResult =
+  await new OfflineDemoImageAnalyzer(
+    identificationMode,
+  ).analyzeImage({
+    image: selectedImage,
+    language,
+  });
+
+      if (cancelled) {
+        return;
+      }
+
+      const localizedAssessment = assessRisk(
+        localizedResult,
+        location,
+        language as IdentificationLanguage,
+      );
+
+      const localizedWarning = generateWarning(
+        localizedResult,
+        location,
+        localizedAssessment,
+        language as IdentificationLanguage,
+      );
+
+      const localizedAlert = createAgroAlert(
+        localizedResult,
+        localizedAssessment,
+        location,
+      );
+
+      setResult(localizedResult);
+      setRiskAssessment(localizedAssessment);
+      setWarning(localizedWarning);
+      setAgroAlert(localizedAlert ?? undefined);
+      setAnalyzedLanguage(language);
+    } catch {
+      // Keep the existing offline result if relocalization fails.
+    }
+  }
+
+  void relocalizeOfflineResult();
+
+  return () => {
+    cancelled = true;
+  };
+}, [
+  language,
+  analyzedLanguage,
+  image,
+  result,
+  identificationMode,
+  location,
+]);
   const uploadInput = useRef<HTMLInputElement>(null);
   const cameraInput = useRef<HTMLInputElement>(null);
 
@@ -967,10 +1041,12 @@ savedObservations.length > 0 ? (
                     <b>
                       {t.analysisNoteTitle}
                     </b>{" "}
-                    {result?.category === "Fauna"
-  ? t.faunaNote
-  : t.floraNote}
-                  </p>
+{result?.analysisSource === "local"
+  ? "Local offline demo identification. Risk assessment is handled locally by AgroBioGuard."
+  : result?.category === "Fauna"
+    ? t.faunaNote
+    : t.floraNote}
+                                      </p>
                 </div>
 
               </div>
