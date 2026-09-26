@@ -217,7 +217,6 @@ function markObservationsAsSynced() {
       </div>
 
       <div className="sync-panel-actions">
-  <div className="sync-panel-actions">
   <button
     type="button"
     className="button outline"
@@ -235,19 +234,7 @@ function markObservationsAsSynced() {
       Mark as Synced
     </button>
   ) : null}
-</div>
-
-  {observationList.length > 0 ? (
-    <button
-      type="button"
-      className="button primary"
-      onClick={markObservationsAsSynced}
-    >
-      Mark as Synced
-    </button>
-  ) : null}
-</div>
-    </div>
+</div>    </div>
 
     {observationList.length === 0 ? (
       <div className="sync-empty">
@@ -388,8 +375,8 @@ function markObservationsAsSynced() {
     <p>{feature.text}</p>
 
     <span className="coming">
-      {t.comingNext} <b>→</b>
-    </span>
+  Open workspace <b>→</b>
+</span>
   </a>
 );
       })}
