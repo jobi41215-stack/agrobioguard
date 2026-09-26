@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FarmDashboard } from "@/components/farm-dashboard";
-
+import { SiteNav } from "@/components/site-nav";
 export default function FarmPage() {
   return (
     <main>
@@ -8,21 +8,7 @@ export default function FarmPage() {
         className="section wrap"
         style={{ paddingTop: "7rem" }}
       >
-        <div className="section-heading">
-          <p className="eyebrow">
-            <i /> SMART AGRICULTURE
-          </p>
-
-          <h1>
-            Farm Intelligence &amp; Monitoring
-          </h1>
-
-          <p>
-            Monitor agricultural conditions, wildlife
-            activity, location context, risk, and future
-            camera-based alerts from one workspace.
-          </p>
-        </div>
+        <SiteNav />
       </section>
 
       <FarmDashboard />

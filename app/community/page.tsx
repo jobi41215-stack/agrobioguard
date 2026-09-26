@@ -1,22 +1,11 @@
 import Link from "next/link";
+import { SiteNav } from "@/components/site-nav";
 
 export default function CommunityPage() {
   return (
     <main>
       <section className="section wrap" style={{ paddingTop: "7rem" }}>
-        <div className="section-heading">
-          <p className="eyebrow">
-            <i /> HOME &amp; COMMUNITY
-          </p>
-
-          <h1>Explore Nature Around You</h1>
-
-          <p>
-            AgroBioGuard helps community users identify flora and fauna,
-            understand environmental risk, and connect observations with
-            location context.
-          </p>
-        </div>
+        <SiteNav />
 
         <div className="feature-grid">
           <Link className="feature-card" href="/flora">

@@ -91,58 +91,70 @@ async function playAlertBeep() {
     await audioContext.resume();
   }
 
+  const startTime =
+    audioContext.currentTime + 0.05;
+
+  const beepDuration = 0.18;
+  const gap = 0.16;
+
   const frequencies = [
-    660,
-    880,
-    660,
+    820,
+    820,
+    620,
   ];
 
   frequencies.forEach(
     (frequency, index) => {
-      window.setTimeout(() => {
-        const oscillator =
-          audioContext.createOscillator();
+      const start =
+        startTime +
+        index * (beepDuration + gap);
 
-        const gain =
-          audioContext.createGain();
+      const oscillator =
+        audioContext.createOscillator();
 
-        oscillator.type = "square";
-        oscillator.frequency.value =
-          frequency;
+      const gain =
+        audioContext.createGain();
 
-        gain.gain.setValueAtTime(
-          0.0001,
-          audioContext.currentTime,
-        );
+      oscillator.type = "square";
+      oscillator.frequency.setValueAtTime(
+        frequency,
+        start,
+      );
 
-        gain.gain.exponentialRampToValueAtTime(
-          0.18,
-          audioContext.currentTime + 0.01,
-        );
+      gain.gain.setValueAtTime(
+        0.0001,
+        start,
+      );
 
-        gain.gain.exponentialRampToValueAtTime(
-          0.0001,
-          audioContext.currentTime + 0.16,
-        );
+      gain.gain.exponentialRampToValueAtTime(
+        0.22,
+        start + 0.015,
+      );
 
-        oscillator.connect(gain);
-        gain.connect(
-          audioContext.destination,
-        );
+      gain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        start + beepDuration,
+      );
 
-        oscillator.start();
-        oscillator.stop(
-          audioContext.currentTime + 0.17,
-        );
-      }, index * 220);
+      oscillator.connect(gain);
+      gain.connect(
+        audioContext.destination,
+      );
+
+      oscillator.start(start);
+      oscillator.stop(
+        start + beepDuration + 0.02,
+      );
     },
   );
 
-  window.setTimeout(() => {
-    void audioContext.close();
-  }, 1000);
+  window.setTimeout(
+    () => {
+      void audioContext.close();
+    },
+    1200,
+  );
 }
-
   async function sendBrowserAlert(
     generatedAlert: AgroAlert,
   ) {
@@ -574,7 +586,7 @@ window.dispatchEvent(
                 ) : null}
 
                 <div className="cctv-alert-signal">
-                  🔊 Audible alert played
+                  🔊 3-beep audible alert played
                   <span>•</span>
                   🔔 Browser notification requested
                 </div>
