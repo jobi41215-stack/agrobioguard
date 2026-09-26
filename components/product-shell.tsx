@@ -6,7 +6,7 @@ import {
   getTranslations,
   type SupportedLanguage,
 } from "@/lib/translations";
-import { IdentificationWorkspace } from "@/components/identification-workspace";
+
 
 const statuses = ["ONLINE AI", "OFFLINE AI", "SYNC PENDING"];
 type PendingObservation = {
@@ -27,10 +27,8 @@ const languageKeys: SupportedLanguage[] = [
 ];
 
 export function ProductShell() {
-  const [mode, setMode] = useState<
-  "Home & Community" | "Smart Agriculture"
->("Home & Community");
-  const [status, setStatus] = useState("ONLINE AI");
+  
+  
 const [pendingObservations, setPendingObservations] =
   useState(0);
 const [showSyncPanel, setShowSyncPanel] =
@@ -162,7 +160,9 @@ function markObservationsAsSynced() {
   <em>{t.heroTitleAccent}</em>
 </h1>
           <p className="intro">{t.heroIntro}</p>
-          <div className="hero-actions"><a className="button primary" href="#identify">{t.identifyImage} <span>→</span></a><a className="button text-button" href="#features">{t.exploreCapabilities}</a></div>
+          <div className="hero-actions"><a className="button primary" href="/community">
+  {t.identifyImage} <span>→</span>
+</a><a className="button text-button" href="#features">{t.exploreCapabilities}</a></div>
         <p className="formal-title">{t.formalTitle}</p>        </div>
         <div className="hero-art" aria-label="Illustration of a protected agricultural landscape" role="img">
           <div className="sun" /><div className="hill hill-back" /><div className="hill hill-front" /><div className="field-lines" />
@@ -173,44 +173,31 @@ function markObservationsAsSynced() {
 
       <section className="status-wrap"><div className="wrap status-bar" aria-label="AI connectivity status">
         <span className="status-label">{t.systemStatus}</span>
-         <div className="status-options">
-  <button
-    onClick={() => setStatus("ONLINE AI")}
-    className={status === "ONLINE AI" ? "status active" : "status"}
-  >
-    <i />
-    {t.onlineAI}
-  </button>
-
-  <button
-    onClick={() => setStatus("OFFLINE AI")}
-    className={status === "OFFLINE AI" ? "status active" : "status"}
-  >
-    <i />
-    {t.offlineAI}
-  </button>
-
+         
+  <div className="status-options">
   <button
     onClick={() => {
-  setStatus("SYNC PENDING");
-  openSyncPanel();
-}}
-    className={status === "SYNC PENDING" ? "status active" : "status"}
+      openSyncPanel();
+    }}
+    className="status active"
+    type="button"
   >
     <i />
     {t.syncPending}
-      {pendingObservations > 0
-  ? ` (${pendingObservations})`
-  : ""}
+    {pendingObservations > 0
+      ? ` (${pendingObservations})`
+      : ""}
   </button>
 </div>
 
 <span className="status-message">
-  {status === "ONLINE AI"
-    ? t.connectedDemo
-    : status === "OFFLINE AI"
-      ? t.localDemo
-      : t.syncDemo}
+  {pendingObservations > 0
+    ? `${pendingObservations} local observation${
+        pendingObservations === 1
+          ? ""
+          : "s"
+      } awaiting sync.`
+    : "AgroBioGuard system ready for new observations."}
 </span>
               </div></section>
 {showSyncPanel ? (
@@ -333,16 +320,7 @@ function markObservationsAsSynced() {
   </a>
 </div>     </section>
 
-      <IdentificationWorkspace
-  language={language}
-  connectivity={
-    status === "ONLINE AI"
-      ? "online"
-      : "offline"
-  }
-  viewMode={mode}
-/>
-    <section className="section feature-section" id="features">
+          <section className="section feature-section" id="features">
   <div className="wrap">
     <div className="section-heading centered">
       <p className="eyebrow">
