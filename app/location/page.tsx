@@ -1,12 +1,16 @@
+"use client";
+
 import Link from "next/link";
 import { LocationDashboard } from "@/components/location-dashboard";
-import { SiteNav } from "@/components/site-nav";
+import { getTranslations } from "@/lib/translations";
+import { useLanguage } from "@/components/language-provider";
 
 export default function LocationPage() {
+  const { language } = useLanguage();
+  const t = getTranslations(language);
+
   return (
     <main>
-      <SiteNav />
-
       <LocationDashboard />
 
       <section
@@ -20,7 +24,7 @@ export default function LocationPage() {
           className="button outline"
           href="/"
         >
-          ← Back to Home
+          ← {t.navHome}
         </Link>
       </section>
     </main>

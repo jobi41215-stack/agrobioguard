@@ -95,6 +95,7 @@ backToCommunity: "Back to Community",
     capabilitiesEyebrow: "DESIGNED TO GROW WITH YOU",
     capabilitiesTitle: "Nature intelligence, made approachable.",
     comingNext: "Coming next",
+openWorkspace: "Open workspace",
 
     smartAgricultureEyebrow: "SMART AGRICULTURE",
     farmTitle: "A clearer view of every field.",
@@ -242,6 +243,7 @@ backToCommunity: "சமூகப் பகுதிக்குத் திர
     capabilitiesEyebrow: "உங்களுடன் வளர வடிவமைக்கப்பட்டது",
     capabilitiesTitle: "இயற்கை நுண்ணறிவு, எளிய அணுகுமுறையில்.",
     comingNext: "அடுத்து வரும்",
+openWorkspace: "பணியிடத்தைத் திறக்கவும்",
 
     smartAgricultureEyebrow: "ஸ்மார்ட் வேளாண்மை",
     farmTitle: "ஒவ்வொரு வயலையும் தெளிவாக பாருங்கள்.",
@@ -390,6 +392,7 @@ backToCommunity: "సమాజానికి తిరిగి వెళ్ల
     capabilitiesEyebrow: "మీతో కలిసి ఎదగడానికి రూపొందించబడింది",
     capabilitiesTitle: "ప్రకృతి నైపుణ్యం, సులభమైన అనుభవంగా.",
     comingNext: "తదుపరి",
+openWorkspace: "వర్క్‌స్పేస్‌ను తెరవండి",
 
     smartAgricultureEyebrow: "స్మార్ట్ వ్యవసాయం",
     farmTitle: "ప్రతి పొలానికి మరింత స్పష్టమైన దృశ్యం.",
@@ -529,6 +532,7 @@ backToCommunity: "समुदाय पर वापस जाएँ",
     capabilitiesEyebrow: "आपके साथ बढ़ने के लिए बनाया गया",
     capabilitiesTitle: "प्रकृति की बुद्धिमत्ता, सरल अनुभव में।",
     comingNext: "अगला",
+openWorkspace: "वर्कस्पेस खोलें",
 
     smartAgricultureEyebrow: "स्मार्ट कृषि",
     farmTitle: "हर खेत का अधिक स्पष्ट दृश्य।",
@@ -668,6 +672,7 @@ backToCommunity: "ಸಮುದಾಯಕ್ಕೆ ಹಿಂತಿರುಗಿ",
     capabilitiesEyebrow: "ನಿಮ್ಮೊಂದಿಗೆ ಬೆಳೆಯಲು ವಿನ್ಯಾಸಗೊಳಿಸಲಾಗಿದೆ",
     capabilitiesTitle: "ಪ್ರಕೃತಿ ಬುದ್ಧಿಮತ್ತೆ, ಸರಳ ಅನುಭವದಲ್ಲಿ.",
     comingNext: "ಮುಂದೆ",
+openWorkspace: "ವರ್ಕ್‌ಸ್ಪೇಸ್ ತೆರೆಯಿರಿ",
 
     smartAgricultureEyebrow: "ಸ್ಮಾರ್ಟ್ ಕೃಷಿ",
     farmTitle: "ಪ್ರತಿ ಕ್ಷೇತ್ರದ ಸ್ಪಷ್ಟ ದೃಶ್ಯ.",
@@ -807,6 +812,7 @@ backToCommunity: "സമൂഹത്തിലേക്ക് മടങ്ങു�
     capabilitiesEyebrow: "നിങ്ങളോടൊപ്പം വളരാൻ രൂപകൽപ്പന ചെയ്തത്",
     capabilitiesTitle: "പ്രകൃതി ബുദ്ധി, ലളിതമായ അനുഭവമായി.",
     comingNext: "അടുത്തത്",
+openWorkspace: "വർക്ക്‌സ്‌പേസ് തുറക്കുക",
 
     smartAgricultureEyebrow: "സ്മാർട്ട് കൃഷി",
     farmTitle: "ഓരോ കൃഷിയിടത്തിന്റെയും വ്യക്തമായ കാഴ്ച.",

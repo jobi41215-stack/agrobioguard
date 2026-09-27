@@ -1,8 +1,17 @@
+"use client";
+
 import Link from "next/link";
 import { CctvDemo } from "@/components/cctv-demo";
 import { SiteNav } from "@/components/site-nav";
+import {
+  getTranslations,
+} from "@/lib/translations";
+import { useLanguage } from "@/components/language-provider";
 
 export default function CctvPage() {
+  const { language } = useLanguage();
+  const t = getTranslations(language);
+
   return (
     <main>
       <SiteNav />
@@ -20,7 +29,7 @@ export default function CctvPage() {
           className="button outline"
           href="/farm"
         >
-          ← Back to Smart Agriculture
+          ← {t.smartAgriculture}
         </Link>
       </section>
     </main>
