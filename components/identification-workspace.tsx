@@ -208,17 +208,13 @@ useEffect(() => {
     }
 
     if (!file.type.startsWith("image/")) {
-      setError(
-        "Choose an image file in JPG, PNG, WebP, or another supported image format.",
-      );
+      setError(t.chooseSupportedImage);
       setState("error");
       return;
     }
 
     if (file.size > 10 * 1024 * 1024) {
-      setError(
-        "This image is larger than 10 MB. Choose a smaller image and try again.",
-      );
+      setError(t.imageTooLarge);
       setState("error");
       return;
     }
@@ -310,7 +306,7 @@ useEffect(() => {
 }
   async function analyzeImage() {
     if (!image) {
-      setError("Add an image before starting an analysis.");
+      setError(t.addImageBeforeAnalysis);
       setState("error");
       return;
     }
@@ -459,16 +455,16 @@ setState("success");
 
   <div>
     <strong>
-      {connectivity === "online"
-        ? "ONLINE AI MODE"
-        : "OFFLINE AI MODE"}
-    </strong>
+  {connectivity === "online"
+    ? t.onlineAiMode
+    : t.offlineAiMode}
+</strong>
 
-    <span>
-      {connectivity === "online"
-        ? "Cloud AI services are available for image analysis."
-        : "Local analysis is active. No cloud AI API is used."}
-    </span>
+<span>
+  {connectivity === "online"
+    ? t.onlineAiDescription
+    : t.offlineAiDescription}
+</span>
   </div>
 </div>
 <div className="view-context-banner">
@@ -750,7 +746,7 @@ setState("success");
               <span>{t.analysisResult}</span>
 <b className="demo-label">
   {result?.analysisSource === "local"
-    ? "LOCAL OFFLINE DEMO"
+    ? t.localOfflineDemo
     : result?.category === "Fauna"
       ? "GEMINI AI"
       : "PLANTNET AI"}
@@ -842,8 +838,10 @@ setState("success");
                     </dt>
 
                     <dd>
-                      {result?.provider?.model ??
-                        "Plant identification service"}
+                      {result?.analysisSource === "local"
+  ? t.localDemoSource
+  : result?.provider?.model ??
+    t.plantIdentificationService}
                     </dd>
                   </div>
 
@@ -852,8 +850,8 @@ setState("success");
 
                     <dd>
                       {result?.commonName ??
-                        result?.identifiedName ??
-                        "Not available"}
+  result?.identifiedName ??
+  t.notAvailable}
                     </dd>
                   </div>
 
@@ -880,8 +878,8 @@ setState("success");
                             </small>
                           ) : (
                             <small>
-                              Coordinates are not available.
-                            </small>
+  {t.coordinatesUnavailableShort}
+</small>
                           )}
                         </>
                       ) : (
@@ -940,7 +938,7 @@ setState("success");
       </span>
 
       <div>
-        <b>HIGH PRIORITY ALERT</b>
+        <b>{t.highPriorityAlert}</b>
 
         <small>
           {agroAlert.priority.toUpperCase()}
@@ -978,11 +976,14 @@ savedObservations.length > 0 ? (
       <span aria-hidden="true">💾</span>
 
       <div>
-        <b>LOCAL OBSERVATION HISTORY</b>
-        <small>
-          {savedObservations.length} observation
-          {savedObservations.length === 1 ? "" : "s"} saved
-        </small>
+        <b>{t.localObservationHistory}</b>
+
+<small>
+  {savedObservations.length}{" "}
+  {savedObservations.length === 1
+    ? t.observationSaved
+    : t.observationsSaved}
+</small>
       </div>
     </div>
 
@@ -998,13 +999,18 @@ savedObservations.length > 0 ? (
             </strong>
 
             <span>
-              {observation.category} · Risk{" "}
-              {observation.risk.toUpperCase()}
-            </span>
+  {observation.category === "Flora"
+    ? t.flora
+    : observation.category === "Fauna"
+      ? t.fauna
+      : observation.category}{" "}
+  · {t.riskLabel}{" "}
+  {observation.risk.toUpperCase()}
+</span>
 
             <small>
-              Awaiting sync
-            </small>
+  {t.awaitingSync}
+</small>
           </div>
         ),
       )}
@@ -1069,10 +1075,11 @@ savedObservations.length > 0 ? (
                       {t.analysisNoteTitle}
                     </b>{" "}
 {result?.analysisSource === "local"
-  ? "Local offline demo identification. Risk assessment is handled locally by AgroBioGuard."
+  ? t.localOfflineNote
   : result?.category === "Fauna"
     ? t.faunaNote
     : t.floraNote}
+
                                       </p>
                 </div>
 

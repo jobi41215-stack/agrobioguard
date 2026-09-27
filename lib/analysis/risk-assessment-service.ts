@@ -154,7 +154,7 @@ const observationName =
     const localized = getGenericRiskText(language, "weed");
     return {
       level: "moderate",
-      title: "Moderate agricultural risk",
+      title: localized.title,
       description:
     `${localized.description} ` +
     getLocationRiskText(language, location),
@@ -170,7 +170,7 @@ const observationName =
     const localized = getGenericRiskText(language, "pest");
     return {
       level: "high",
-      title: "High agricultural monitoring priority",
+      title: localized.title,
       description:
     `${localized.description} ` +
     getLocationRiskText(language, location),
@@ -188,7 +188,7 @@ const observationName =
     const localized = getGenericRiskText(language, "insect");
     return {
       level: "moderate",
-      title: "Moderate monitoring priority",
+      title: localized.title,
       description:
     `${localized.description} ` +
     getLocationRiskText(language, location),
@@ -206,7 +206,7 @@ const observationName =
     const localized = getGenericRiskText(language, "fauna");
     return {
       level: "moderate",
-      title: "Ecological monitoring required",
+      title: localized.title,
       description:
     `${localized.description} ` +
     getLocationRiskText(language, location),
@@ -234,16 +234,19 @@ const observationName =
    * Safe fallback for observations that are not covered by the
    * current AgroBioGuard rule set.
    */
-  return {
-    level: "unknown",
-    title: `${result.category} risk assessment`,
-    description:
-      "AgroBioGuard does not currently have enough species-specific " +
-      "knowledge to determine an agricultural or ecological risk for " +
-      "this observation. " +
-      getLocationDescription(location),
-    recommendation:
-      "Review the identification before taking agricultural or ecological action.",
-    category: result.category,
-  };
+  const localizedUnknown = getGenericRiskText(
+  language,
+  "unknown",
+);
+
+return {
+  level: "unknown",
+  title: localizedUnknown.title,
+  description:
+    `${localizedUnknown.description} ` +
+    getLocationRiskText(language, location),
+  recommendation:
+    localizedUnknown.recommendation,
+  category: result.category,
+};
 }
