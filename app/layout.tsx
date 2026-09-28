@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import "./globals.css";
 import { LanguageProvider } from "@/components/language-provider";
+import { AIAssistant } from "@/components/ai-assistant";
 
 export const metadata: Metadata = {
   title:
@@ -19,6 +20,7 @@ export default function RootLayout({
       <body>
         <LanguageProvider>
           {children}
+          <AIAssistant />
         </LanguageProvider>
       </body>
     </html>

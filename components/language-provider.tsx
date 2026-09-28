@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import {
   createContext,
@@ -11,10 +11,7 @@ import type { SupportedLanguage } from "@/lib/translations";
 
 const LANGUAGE_STORAGE_KEY = "agrobioguard-language";
 
-const htmlLanguageCodes: Record<
-  SupportedLanguage,
-  string
-> = {
+const htmlLanguageCodes: Record<SupportedLanguage, string> = {
   English: "en",
   Tamil: "ta",
   Telugu: "te",
@@ -38,9 +35,7 @@ type LanguageContextValue = {
 };
 
 const LanguageContext =
-  createContext<LanguageContextValue | undefined>(
-    undefined,
-  );
+  createContext<LanguageContextValue | undefined>(undefined);
 
 export function LanguageProvider({
   children,
@@ -49,6 +44,8 @@ export function LanguageProvider({
 }) {
   const [language, setLanguageState] =
     useState<SupportedLanguage>("English");
+
+  const [languageLoaded, setLanguageLoaded] = useState(false);
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem(
@@ -65,9 +62,15 @@ export function LanguageProvider({
         savedLanguage as SupportedLanguage,
       );
     }
+
+    setLanguageLoaded(true);
   }, []);
 
   useEffect(() => {
+    if (!languageLoaded) {
+      return;
+    }
+
     localStorage.setItem(
       LANGUAGE_STORAGE_KEY,
       language,
@@ -75,7 +78,7 @@ export function LanguageProvider({
 
     document.documentElement.lang =
       htmlLanguageCodes[language];
-  }, [language]);
+  }, [language, languageLoaded]);
 
   function setLanguage(
     nextLanguage: SupportedLanguage,
@@ -89,6 +92,10 @@ export function LanguageProvider({
 
     document.documentElement.lang =
       htmlLanguageCodes[nextLanguage];
+  }
+
+  if (!languageLoaded) {
+    return null;
   }
 
   return (
